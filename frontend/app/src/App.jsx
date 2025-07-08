@@ -11,16 +11,19 @@ import Contact from './pages/Contact';
 import './App.css';
 function App() {
   return (
+    <div className="App">
+      
     <Router>
-      <Header />
+      <Header className='header'/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/book" element={<Book />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
-      <Footer />
+      <Footer/>
     </Router>
+    </div>
   )
 }
 

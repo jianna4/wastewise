@@ -3,7 +3,7 @@ $primary-color2: #FFA500;
 .header {
     display: flex;
     background-color: $primary-color1;
-    color: darken($primary-color2, 20%);
+   // color: color.adjust($color, $saturation: 20%);
     padding: 0px;
     margin-top:0px;
     padding-top: 0px;
