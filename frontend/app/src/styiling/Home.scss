@@ -3,6 +3,7 @@ $primary-color2: #FFA500;
 .Home{
     
     margin-top:70px;
+    background-image: url('../assets/back4.jpg');
 
 }
 .container{
@@ -79,8 +80,7 @@ $primary-color2: #FFA500;
 }
 
 .info{
-    background-image: url('../assets/back2.jpg');
-    background-size:cover;
+   
     width:100%;
     height:350px;
     display:flex;
@@ -92,16 +92,24 @@ $primary-color2: #FFA500;
 .info1{
     width:50%;
     font-size:20px;
-    text-align: center;
+    display:flex;
+    justify-content: center;
+    padding-top:90px;
+    h1{
+        display:flex;
+        justify-content: center;
+    }
+
 }
 .info2{
     
     width:50%;
     font-size:16px;
     font-weight:400;
+    padding-top:70px;
     .ul{
         background-color: grey;
-        padding-top: 100px;
+        
     }
 }
 .container2{
@@ -125,4 +133,32 @@ $primary-color2: #FFA500;
     .ul{
         align-items: center;
     }
+}
+ul{
+    list-style-type: none;
+}
+.button{
+    color:black;
+    font-size:12px;
+    padding:8px;
+    border-radius: 5px;
+    font-weight:normal;
+    background-color: #FFA500;
+    border:1px solid $primary-color1;
+    display:flex;
+    justify-content: center;
+    &:hover{
+        transform:scale(1.01);
+        transition:0.3s;
+        cursor:pointer;
+    }
+    &:active{
+        background-color: orange;
+    }
+
+}
+.bdiv{
+    display:flex;
+    justify-content: center;
+    align-items:center;
 }

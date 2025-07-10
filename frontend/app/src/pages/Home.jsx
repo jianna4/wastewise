@@ -8,9 +8,16 @@ import anime from '../assets/anime.jpg'
 import {useNavigate} from 'react-router-dom'
 import back from '../assets/back.jpg'
 
-import { FaBottleWater, FaBiohazard, FaHardHat, FaLaptop } from "react-icons/fa6";
-import { GiRoastChicken, GiBrickWall } from "react-icons/gi";
-import { MdDevices } from "react-icons/md";
+import { FaWineBottle, FaAppleAlt, FaLaptop, FaRadiationAlt, FaBuilding } from 'react-icons/fa';
+import {
+  FaBolt,           // Fast service
+  FaLeaf,           // Eco-friendly
+  FaUsers,          // Community
+  FaUserTie,        // Professional team
+  FaTag,            // Affordable pricing
+  FaCalendarAlt,    // Scheduling
+  FaSmile           // Satisfaction
+} from 'react-icons/fa';
 
 function Home() {
   const navigate = useNavigate()
@@ -20,7 +27,8 @@ function Home() {
         <div className='left'>
           <h1>Fast,Reliable & clean Garbage collection</h1>
           <p>book to get your gabage collected today,lets build a cleaner world one pick upat a time.</p>
-          <button onClick={() => navigate('/book')}>Book a pickup</button>
+          <div className='bdiv'>
+          <button className='button' onClick={() => navigate('/book')}>Book a pickup</button></div>
         </div>
         <div className='right'>
           <img src={img} alt='Home' className='img0' />
@@ -46,15 +54,15 @@ function Home() {
           <div clasName='info1'>
             <h3>Making a cleaner world with every pickup</h3>
             <p>We are committed to providing fast, reliable, and clean garbage collection services to help keep our communities clean and healthy.</p>
-            <button onClick={() => navigate('/about')}>Learn more</button>
+            <div  className='bdiv'><button className='button' onClick={() => navigate('/about')}>Learn more</button></div>
           </div>
           <div className='info2'>
             <ul>
-              <li>plastic waste</li>
-              <li>food waste</li>
-              <li>e-waste</li>
-              <li>hazardous waste</li>
-              <li>construction waste</li>
+              <li><FaWineBottle title="Plastic Waste" className='icon' /> plastic waste</li>
+              <li><FaAppleAlt title="food waste" className='icon'/> food waste</li>
+              <li><FaLaptop title="e-waste"className='icon'/>e-waste</li>
+              <li><FaRadiationAlt tittle="harzadious"className='icon'/> hazardous waste</li>
+              <li><FaBuilding title="construction"className='icon'/> construction waste</li>
             </ul>
           </div>
         </div>
@@ -65,13 +73,13 @@ function Home() {
           <div className='container-right'>
             <h1>Why choose us?</h1>
             <ul>
-              <li>Fast and reliable service</li>
-              <li>Eco-friendly practices</li>
-              <li>Community-focused initiatives</li>
-              <li>Experienced and professional team</li>
-              <li>Affordable pricing</li>
-              <li>Flexible scheduling options</li>
-              <li>Customer satisfaction guaranteed</li>
+              <li><FaBolt className='icons'/>  Fast and reliable service</li>
+              <li><FaLeaf className='icons'/>  Eco-friendly practices</li>
+              <li><FaUsers className='icons'/>  Community-focused initiatives</li>
+              <li><FaUserTie className='icons'/>  Experienced and professional team</li>
+              <li><FaTag className='icons'/>  Affordable pricing</li>
+              <li><FaCalendarAlt className='icons'/>  Flexible scheduling options</li>
+              <li><FaSmile className='icons'/>  Customer satisfaction guaranteed</li>
             </ul>
           </div>
 
