@@ -8,10 +8,13 @@ $primary-color2: #FFA500;
     margin-top:0px;
     padding-top: 0px;
     margin:0;
+    &.book{
+        background-color: transparent;
+    }
  
 }
 .right-header{
-    flex: 1;
+    //flex: 1;
     display: flex;
     justify-content: flex-end;
     align-items:flex-end;

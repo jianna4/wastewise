@@ -21,7 +21,7 @@ function App() {
         <Route path="/book" element={<Book />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
-      <Footer/>
+      <Footer className='footer'/>
     </Router>
     </div>
   )

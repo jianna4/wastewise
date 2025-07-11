@@ -28,7 +28,9 @@ function Home() {
           <h1>Fast,Reliable & clean Garbage collection</h1>
           <p>book to get your gabage collected today,lets build a cleaner world one pick upat a time.</p>
           <div className='bdiv'>
-          <button className='button' onClick={() => navigate('/book')}>Book a pickup</button></div>
+          <button className='button' onClick={() => navigate('/book')}>Book a pickup
+            </button>
+            </div>
         </div>
         <div className='right'>
           <img src={img} alt='Home' className='img0' />

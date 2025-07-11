@@ -3,9 +3,12 @@ import React from 'react'
 import '../styiling/header.scss' // Assuming you have a CSS file for styling
 import { Link } from 'react-router-dom'
 import img from '../assets/img.png'
-function header() {
+import { useLocation } from 'react-router-dom'
+function Header() {
+  const location=useLocation();
+  const isBook=location.pathname === '/book';
   return (
-    <div className="header">
+    <div className={`header ${isBook ? 'book' : ''}`}>
       <div className='left-header'>
         <img className='imgh'src={img}/>
         <h1>WasteWise.</h1>
@@ -23,4 +26,4 @@ function header() {
   )
 }
 
-export default header
+export default Header
