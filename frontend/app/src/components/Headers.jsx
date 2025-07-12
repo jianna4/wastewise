@@ -1,6 +1,6 @@
 import React from 'react'
 //import '../styiling/Header.jsx' // Assuming you have a CSS file for styling
-import '../styiling/header.scss' // Assuming you have a CSS file for styling
+import '../styiling/Header.scss' // Assuming you have a CSS file for styling
 import { Link } from 'react-router-dom'
 import img from '../assets/img.png'
 import { useLocation } from 'react-router-dom'
