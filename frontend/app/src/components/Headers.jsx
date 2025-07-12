@@ -9,17 +9,17 @@ function Header() {
   const isBook=location.pathname === '/book';
   return (
     <div className={`header ${isBook ? 'book' : ''}`}>
-      <div className='left-header'>
+      <div className={`left-header ${isBook ? 'header-book' : ''}`}>
         <img className='imgh'src={img}/>
         <h1>WasteWise.</h1>
         
         </div>
         <div className='right-header'>
           
-            <Link className='link' to="/">Home</Link>
-            <Link className='link' to="/about">About</Link>
-            <Link className='link' to="/contact">Contact</Link>
-            <Link className='link' to="/book">Book</Link>
+            <Link className={`link ${isBook ? 'lbook' : ''}`} to="/">Home</Link>
+            <Link className={`link ${isBook ? 'lbook' : ''}`} to="/about">About</Link>
+            <Link className={`link ${isBook ? 'lbook' : ''}`} to="/contact">Contact</Link>
+            <Link className={`link ${isBook ? 'lbook' : ''}`} to="/book">Book</Link>
             
         </div>
     </div>

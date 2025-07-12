@@ -14,7 +14,7 @@ $primary-color2: #FFA500;
  
 }
 .right-header{
-    //flex: 1;
+    flex: 1;
     display: flex;
     justify-content: flex-end;
     align-items:flex-end;
@@ -33,11 +33,14 @@ $primary-color2: #FFA500;
     border:0.5px solid black;
     border-radius: 20px;
     &:hover{
-        color:#FFA500;
+        color:darken($primary-color2, 10%);;
         border-color:#FFA500;
     }
     &:active{
         border-color:#FFA500;
+    }
+    &.lbook{
+        color:darken($primary-color1, 100%)
     }
 }
 .left-header{
@@ -48,6 +51,10 @@ $primary-color2: #FFA500;
     align-items:center;
     justify-content: flex-start;
     gap:20px;
+
+    &.header-book{
+        color:darken($primary-color1, 10%)
+    }
     h1{
         bottom:0;
 
@@ -55,7 +62,8 @@ $primary-color2: #FFA500;
 }
 .imgh{
     height:50px;
-    width:40px;
-    margin:0;
+    width:50px;
+   
+    margin-left:20px;
 
 }

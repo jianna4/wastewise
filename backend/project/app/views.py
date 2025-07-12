@@ -1,124 +1,139 @@
-from django.shortcuts import render
-
-# Create your views here.
-# backend/core/views.py
-from rest_framework import generics, permissions, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.contrib.auth import login, authenticate
-from django.db.models import Q
-from .models import User, County, SubCounty, Driver, PickupRequest
-from .serializers import *
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+from .models import User, Driver, Booking, Pickup, Area
+from .serializers import (
+    UserSerializer, DriverSerializer,
+    BookingSerializer, PickupSerializer
+)
 
-# ========================
-# Authentication
-# ========================
-class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny]
+# -------------------------------
+# Register User
+# -------------------------------
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register_user(request):
+    email = request.data.get("email")
+    password = request.data.get("password")
+    name = request.data.get("name")
 
-    def perform_create(self, serializer):
-        user = serializer.save()
-        login(self.request, user)
+    if not email or not password:
+        return Response({"error": "Email and password required"}, status=400)
 
-class LoginView(APIView):
-    permission_classes = [permissions.AllowAny]
-    
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-        user = authenticate(username=username, password=password)
-        if user:
-            login(request, user)
-            return Response({'status': 'Logged in'})
-        return Response({'error': 'Invalid credentials'}, status=400)
+    if User.objects.filter(email=email).exists():
+        return Response({"error": "Email already registered"}, status=400)
 
-# ========================
-# Locations
-# ========================
-class CountyListView(generics.ListAPIView):
-    queryset = County.objects.all()
-    serializer_class = CountySerializer
-    permission_classes = [permissions.AllowAny]
+    user = User.objects.create_user(email=email, password=password, name=name)
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        "user": UserSerializer(user).data,
+        "refresh": str(refresh),
+        "access": str(refresh.access_token)
+    }, status=201)
 
-class SubCountyListView(generics.ListAPIView):
-    serializer_class = SubCountySerializer
-    permission_classes = [permissions.AllowAny]
+# -------------------------------
+# Login User
+# -------------------------------
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_user(request):
+    email = request.data.get("email")
+    password = request.data.get("password")
+    user = authenticate(request, email=email, password=password)
 
-    def get_queryset(self):
-        county_id = self.request.query_params.get('county_id')
-        return SubCounty.objects.filter(county_id=county_id)
+    if user:
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "user": UserSerializer(user).data,
+            "refresh": str(refresh),
+            "access": str(refresh.access_token)
+        })
+    return Response({"error": "Invalid credentials"}, status=401)
 
-# ========================
-# Pickups
-# ========================
-class PickupRequestCreateView(generics.CreateAPIView):
-    serializer_class = PickupRequestSerializer
-    permission_classes = [permissions.IsAuthenticated]
+# -------------------------------
+# Login Driver
+# -------------------------------
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_driver(request):
+    email = request.data.get("email")
+    password = request.data.get("password")
+    user = authenticate(request, email=email, password=password)
 
-    def perform_create(self, serializer):
-        serializer.save(
-            user=self.request.user,
-            subcounty=self.request.user.userlocation.subcounty
-        )
+    if user and hasattr(user, 'driver'):
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            "driver": DriverSerializer(user.driver).data,
+            "refresh": str(refresh),
+            "access": str(refresh.access_token)
+        })
+    return Response({"error": "Invalid driver credentials"}, status=401)
 
-class UserPickupListView(generics.ListAPIView):
-    serializer_class = PickupRequestSerializer
-    permission_classes = [permissions.IsAuthenticated]
+# -------------------------------
+# Create Booking
+# -------------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_booking(request):
+    area_id = request.data.get("area_id")
+    pickup_date = request.data.get("pickup_date")
 
-    def get_queryset(self):
-        return PickupRequest.objects.filter(user=self.request.user)
+    try:
+        area = Area.objects.get(id=area_id)
+    except Area.DoesNotExist:
+        return Response({"error": "Invalid area"}, status=400)
 
-# ========================
-# Driver Endpoints
-# ========================
-class DriverRegisterView(generics.CreateAPIView):
-    serializer_class = DriverSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    booking = Booking.objects.create(
+        user=request.user,
+        area=area,
+        pickup_date=pickup_date
+    )
+    return Response(BookingSerializer(booking).data, status=201)
 
-    def perform_create(self, serializer):
-        if not self.request.user.is_driver:
-            serializer.save(user=self.request.user)
-            self.request.user.is_driver = True
-            self.request.user.save()
+# -------------------------------
+# List User Bookings
+# -------------------------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_user_bookings(request):
+    bookings = Booking.objects.filter(user=request.user)
+    serializer = BookingSerializer(bookings, many=True)
+    return Response(serializer.data)
 
-class AvailablePickupsView(generics.ListAPIView):
-    serializer_class = PickupRequestSerializer
-    permission_classes = [permissions.IsAuthenticated]
+# -------------------------------
+# Complete Pickup (Driver only)
+# -------------------------------
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def complete_pickup(request, booking_id):
+    if not hasattr(request.user, 'driver'):
+        return Response({"error": "Only drivers can complete pickups"}, status=403)
 
-    def get_queryset(self):
-        if not self.request.user.is_driver:
-            return PickupRequest.objects.none()
-        return PickupRequest.objects.filter(
-            status='pending',
-            subcounty__in=self.request.user.driver.assigned_subcounties.all()
-        )
+    try:
+        booking = Booking.objects.get(id=booking_id, is_completed=False)
+    except Booking.DoesNotExist:
+        return Response({"error": "Booking not found or already completed"}, status=404)
 
-class AcceptPickupView(generics.UpdateAPIView):
-    queryset = PickupRequest.objects.all()
-    serializer_class = PickupRequestSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    pickup = Pickup.objects.create(
+        booking=booking,
+        driver=request.user.driver
+    )
+    booking.is_completed = True
+    booking.save()
+    return Response(PickupSerializer(pickup).data, status=201)
 
-    def update(self, request, *args, **kwargs):
-        pickup = self.get_object()
-        if not request.user.is_driver:
-            return Response({"error": "Driver access only"}, status=403)
-        pickup.status = 'accepted'
-        pickup.assigned_driver = request.user.driver
-        pickup.save()
-        return Response({"status": "Pickup accepted"})
+# -------------------------------
+# List Driver Pickups
+# -------------------------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_driver_pickups(request):
+    if not hasattr(request.user, 'driver'):
+        return Response({"error": "Only drivers can view pickups"}, status=403)
 
-# ========================
-# Admin Endpoints
-# ========================
-class CompletePickupView(generics.UpdateAPIView):
-    queryset = PickupRequest.objects.all()
-    serializer_class = PickupRequestSerializer
-    permission_classes = [permissions.IsAdminUser]
-
-    def update(self, request, *args, **kwargs):
-        pickup = self.get_object()
-        pickup.status = 'completed'
-        pickup.save()
-        return Response({"status": "Pickup completed"})
+    pickups = Pickup.objects.filter(driver=request.user.driver)
+    serializer = PickupSerializer(pickups, many=True)
+    return Response(serializer.data)

@@ -57,10 +57,16 @@ function Book() {
   }
   return (
   <div className='book'>
-    <div className='container'>
+    <div className='containerb'>
       
-      <div className='book-container'>
-       
+      <div className='book-containerb'>
+       <div className='bo leftb'>
+        hey,im left
+        bjbjnjn
+       </div>
+       <div className='bo rightb'>
+        hey im right
+       </div>
       </div>
       
     </div>

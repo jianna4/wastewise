@@ -1,69 +1,111 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
 
-# Create your models here.
+# -------------------------------
+# Custom User Model
+# -------------------------------
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("Email must be provided")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
-from django.contrib.auth.models import AbstractUser
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(email, password, **extra_fields)
 
-# ---- 1. User Model (Roles: Resident, Driver, Admin) ----
-class User(AbstractUser):
-    phone = models.CharField(max_length=15, unique=True)  # Required for M-Pesa
-    is_driver = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
-    stars = models.IntegerField(default=0)  # Reward points
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=100)
+    stars = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+     
 
     def __str__(self):
-        return f"{self.username} ({self.phone})"
+        return self.email
 
-# ---- 2. Location Tables ----
+
+# -------------------------------
+# County Model
+# -------------------------------
 class County(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
 
+# -------------------------------
+# SubCounty Model
+# -------------------------------
 class SubCounty(models.Model):
+    county = models.ForeignKey(County, on_delete=models.CASCADE, related_name='subcounties')
     name = models.CharField(max_length=100)
-    county = models.ForeignKey(County, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('county', 'name')
 
     def __str__(self):
-        return f"{self.name}, {self.county.name}"
+        return f"{self.name} ({self.county.name})"
 
-# ---- 3. Driver Profile (Extra Fields) ----
+# -------------------------------
+# Area Model
+# -------------------------------
+class Area(models.Model):
+    subcounty = models.ForeignKey(SubCounty, on_delete=models.CASCADE, related_name='areas')
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        unique_together = ('subcounty', 'name')
+
+    def __str__(self):
+        return f"{self.name} ({self.subcounty.name}, {self.subcounty.county.name})"
+# -------------------------------
+# Driver Model
+# -------------------------------
 class Driver(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    assigned_subcounties = models.ManyToManyField(SubCounty)  # Where they operate
-    vehicle_number = models.CharField(max_length=20)
+    vehicle_number = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"Driver {self.user.username}"
+        return f"Driver: {self.user.name}"
 
-# ---- 4. Pickup Request ----
-class PickupRequest(models.Model):
-    TRASH_TYPES = [
-        ('plastic', 'Plastic'),
-        ('metal', 'Metal'),
-        ('organic', 'Organic'),
-        ('e-waste', 'E-Waste'),
-    ]
-
+# -------------------------------
+# Booking Model
+# -------------------------------
+class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    subcounty = models.ForeignKey(SubCounty, on_delete=models.CASCADE)
-    trash_types = models.CharField(max_length=100)  # Comma-separated (e.g., "plastic,metal")
-    address = models.TextField()  # Exact location (e.g., "House 42, Nairobi")
-    status = models.CharField(
-        max_length=20,
-        choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('completed', 'Completed')],
-        default='pending'
-    )
-    assigned_driver = models.ForeignKey(Driver, null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now_add=True)
+    area = models.ForeignKey(Area, on_delete=models.CASCADE)
+    pickup_date = models.DateField()
+    is_completed = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Pickup #{self.id} by {self.user.username}"
+        return f"Booking by {self.user.email} on {self.pickup_date}"
+
+# -------------------------------
+# Pickup Model
+# -------------------------------
+class Pickup(models.Model):
+    booking = models.OneToOneField(Booking, on_delete=models.CASCADE)
+    driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True)
+    completed_at = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):
-        # Auto-add a star when pickup is completed
-        if self.status == 'completed' and not self.pk:
-            self.user.stars += 1
-            self.user.save()
         super().save(*args, **kwargs)
+        # Award star to user
+        user = self.booking.user
+        user.stars += 1
+        user.save()
+
+    def __str__(self):
+        return f"Pickup for {self.booking.user.email} by {self.driver.user.email}"

@@ -1,8 +1,20 @@
-# backend/core/serializers.py
 from rest_framework import serializers
-from .models import User, County, SubCounty, Driver, PickupRequest
+from .models import (
+    User, County, SubCounty, Area,
+    Driver, Booking, Pickup
+)
 
-# Basic Serializers
+# -------------------------------
+# User Serializer
+# -------------------------------
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'name', 'stars']
+
+# -------------------------------
+# Location Serializers
+# -------------------------------
 class CountySerializer(serializers.ModelSerializer):
     class Meta:
         model = County
@@ -10,43 +22,67 @@ class CountySerializer(serializers.ModelSerializer):
 
 class SubCountySerializer(serializers.ModelSerializer):
     county = CountySerializer(read_only=True)
-    
+    county_id = serializers.PrimaryKeyRelatedField(
+        queryset=County.objects.all(), source='county', write_only=True
+    )
+
     class Meta:
         model = SubCounty
-        fields = ['id', 'name', 'county']
+        fields = ['id', 'name', 'county', 'county_id']
 
-# User Serializer
-class UserSerializer(serializers.ModelSerializer):
+class AreaSerializer(serializers.ModelSerializer):
+    subcounty = SubCountySerializer(read_only=True)
+    subcounty_id = serializers.PrimaryKeyRelatedField(
+        queryset=SubCounty.objects.all(), source='subcounty', write_only=True
+    )
+
     class Meta:
-        model = User
-        fields = ['id', 'username', 'phone', 'stars']
-        extra_kwargs = {'password': {'write_only': True}}
+        model = Area
+        fields = ['id', 'name', 'subcounty', 'subcounty_id']
 
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
-
+# -------------------------------
 # Driver Serializer
+# -------------------------------
 class DriverSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
-    assigned_subcounties = SubCountySerializer(many=True, read_only=True)
+    user = UserSerializer(read_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), source='user', write_only=True
+    )
 
     class Meta:
         model = Driver
-        fields = ['id', 'user', 'vehicle_number', 'assigned_subcounties']
+        fields = ['id', 'user', 'user_id', 'vehicle_number']
 
-# Pickup Request Serializer
-class PickupRequestSerializer(serializers.ModelSerializer):
+# -------------------------------
+# Booking Serializer
+# -------------------------------
+class BookingSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    subcounty = SubCountySerializer(read_only=True)
-    trash_types = serializers.MultipleChoiceField(choices=PickupRequest.TRASH_TYPES)
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), source='user', write_only=True
+    )
+    area = AreaSerializer(read_only=True)
+    area_id = serializers.PrimaryKeyRelatedField(
+        queryset=Area.objects.all(), source='area', write_only=True
+    )
 
     class Meta:
-        model = PickupRequest
-        fields = ['id', 'user', 'subcounty', 'trash_types', 'address', 'status', 'created_at']
-        read_only_fields = ['user', 'status', 'created_at']
+        model = Booking
+        fields = ['id', 'user', 'user_id', 'area', 'area_id', 'pickup_date', 'is_completed']
 
-    def create(self, validated_data):
-        # Auto-set the user from request
-        validated_data['user'] = self.context['request'].user
-        return super().create(validated_data)
+# -------------------------------
+# Pickup Serializer
+# -------------------------------
+class PickupSerializer(serializers.ModelSerializer):
+    booking = BookingSerializer(read_only=True)
+    booking_id = serializers.PrimaryKeyRelatedField(
+        queryset=Booking.objects.all(), source='booking', write_only=True
+    )
+    driver = DriverSerializer(read_only=True)
+    driver_id = serializers.PrimaryKeyRelatedField(
+        queryset=Driver.objects.all(), source='driver', write_only=True
+    )
+
+    class Meta:
+        model = Pickup
+        fields = ['id', 'booking', 'booking_id', 'driver', 'driver_id', 'completed_at']
