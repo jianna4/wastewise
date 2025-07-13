@@ -61,8 +61,11 @@ function Book() {
       
       <div className='book-containerb'>
        <div className='bo leftb'>
-        hey,im left
-        bjbjnjn
+       <h2>welcome dear user</h2>
+       <p>book a collection and get to expirience a smooth ride cleaning your environment</p>
+       <ul>
+        <li></li>
+       </ul>
        </div>
        <div className='bo rightb'>
         hey im right

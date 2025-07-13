@@ -22,7 +22,7 @@ $primary-color2: #FFA500;
     left:90px;
     height:410px;
     border-radius: 20px;
-    box-shadow: 1px 0px 31px 1px rgba(0,0,0,0.21);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     align-items: center;
     display:flex;
     flex-direction: row;
@@ -40,6 +40,8 @@ $primary-color2: #FFA500;
     height:380px;
     border-radius: 10px;
     margin:10px;
+    display:flex;
+    flex-direction: column;
 }
 .bo{
     justify-content: space-between;

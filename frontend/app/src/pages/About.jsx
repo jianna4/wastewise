@@ -1,82 +1,127 @@
 import React from 'react'
 //import '../styiling/About.scss' // Assuming you have a CSS file for styling
+import Carousel from 'react-bootstrap/Carousel';
+import img1 from '../assets/1.jpg'
+import img2 from '../assets/2.jpg'
+import img3 from '../assets/3.jpg'
 import {useState} from 'react'
+import '../styiling/About.scss'
+import imgb from '../assets/hey.jpg'
+import imgc from '../assets/anime.jpg'
 
-const slides=[
-  {image:'../assets/1.jpg', text:'making our country cleen a pickup at a time'},
-  {image:'../assets/2.jpg', text:'Reliable garbage collection one click away'},
-  {image:'../assets/3.jpg', text:'WasteWise: Your partner in a cleaner tomorrow'},
-  {image:'../assets/1.jpg', text:'WasteWise: Eco-friendly and affordable'},
-  ]
 function About() {
-  const [current, setCurrent] = useState(0);
-  const NextSlide = () => {
-    setCurrent((current + 1) % slides.length);
-  };
-  const PrevoiusSlide = () => {
-    setCurrent(((current - 1) + slides.length) % slides.length);
-  };
-
-
-
+ 
   return (
-
     <div className='About'>
-      <div classNmae='carousell'>
-        <div className='COR-LEFT' onClick={PrevoiusSlide}>l</div>
-        <div ClassName='cor-right' onclick={NextSlide}>R</div>
-        {slides.map((slide, index) => (
-          <div
-            key={index}
-            className={`cor-img ${index === current ? 'active' : ''}`}
-            style={{ backgroundImage: `url(${slide.image})` }}>
-            <div className="slide-text">{slide.text}</div>
-          </div>
-        ))}
-      </div>
-      <div classNmae='who'>
-
-        <div className='who-info'>
-          <h1>Who We Are</h1>
-          <p>At WasteWise, we are more than just a garbage collection service — we are a team driven by the mission to create cleaner, healthier communities. Founded with the simple goal of helping people properly manage their waste, we believe everyone deserves to live in a clean environment.</p>
+      <div className='carousell'>
+         <Carousel fade> {/* Add 'fade' for fade transition instead of slide */}
+          <Carousel.Item interval={3000}> {/* Adjust interval as needed */}
+             <img src={img1} alt="First slide" className='imgca'/>
+            <Carousel.Caption>
+              <h3>First slide label</h3>
+              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item interval={3000}>
+            <img src={img2} alt="Second slide" className='imgca'/>
+            <Carousel.Caption>
+              <h3>Second slide label</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item interval={3000}>
+            <img src={img3} alt="Third slide" className='imgca'/>
+            <Carousel.Caption>
+              <h3>Third slide label</h3>
+              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+        </Carousel>
         </div>
-
-      </div>
-      <div className='mission'>
-        <h1>Our Mission</h1>
-        <p>Our mission is to provide affordable, reliable, and eco-friendly waste collection services for homes, businesses, and institutions. We aim to reduce pollution, promote recycling, and educate the public on sustainable waste management practices.</p>
-      </div>
-      <div ClassName='start'>
-        <h1>Why We Started</h1>
-        <p>We started WasteWise because we saw a problem — uncollected garbage, illegal dumping, and communities struggling with waste. We knew we could do something about it. With passion and determination, we set out to offer a modern, community-centered solution that helps people keep their surroundings clean and safe.</p>
-      </div>
-      <div classNmae="do">
-        <h1>What We Do</h1>
-        <p>We collect and sort all type of waste including</p>
-        <ul>
-          <li>Plastic Waste</li>
-          <li>Food Waste</li>
-          <li>E-waste</li>
-          <li>Hazardous Waste</li>
-          <li>Construction Waste</li>
-
-
-        </ul>
-        <p>We also offer</p>
-        <ul>
-          <li>Recycling services</li>
-          <li>Community clean-up events</li>
-          <li>Awareness campaigns on recycling and waste separation</li>
-        </ul>
-      </div>
-      <div className='community'>
-        <h1>Our Commitment to the Environment</h1>
-        <p>We believe a cleaner environment starts with action. That’s why we follow eco-friendly practices, such as sorting recyclable materials, using fuel-efficient trucks, and partnering with recycling companies. Every pickup we make is a step toward a greener future.</p>
-      </div>
-      <div classNmae='focus'>
-        <h1>Community-Focused</h1>
-        <p>Our work goes beyond waste collection. We are proud to support schools, local businesses, and neighborhoods through clean-up drives and educational programs. We’re here to help build a cleaner community — together.</p>
-      </div>
+        <div className="columns-containera">
+             <div className="column">
+              <h3>Who We Are</h3>
+               <p>At WasteWise, we are more than just a garbage collection service — we are a team driven by the mission to create cleaner, healthier communities. Founded with the simple goal of helping people properly manage their waste, we believe everyone deserves to live in a clean environment.</p>
+             </div>
+        
+             <div className="column">
+              <h3>Our Mission</h3>
+               <p>Our mission is to provide affordable, reliable, and eco-friendly waste collection services for homes, businesses, and institutions. We aim to reduce pollution, promote recycling, and educate the public on sustainable waste management practices.</p>
+             </div>
+        
+             <div className="column">
+               <h3>Why We Started</h3>
+               <p>We started WasteWise because we saw a problem — uncollected garbage, illegal dumping, and communities struggling with waste. We knew we could do something about it. With passion and determination, we set out to offer a modern, community-centered solution that helps people keep their surroundings clean and safe.</p>
+             </div>
+           </div>
+        
+        <div className='alldo'>
+          <div className='doo doimg'>
+            <img src={imgb} className='img'/>
+          </div>
+        <div className="doo do">
+          <h1>What We Do</h1>
+          <p>We collect and sort all type of waste including</p>
+        
+            <ol className="custom-numbered-list">
+              <li>
+                <span className="list-title">Plastic Waste</span>
+                <span className="list-description">this includes allburnables</span>
+              </li>
+              <li>
+                <span className="list-title">Food Waste</span>
+                <span className="list-description">this is all the kitchen refuse</span>
+              </li>
+              <li>
+                <span className="list-title">E-waste</span>
+                <span className="list-description">Another thing for the electronics</span>
+              </li>
+              <li>
+                <span className="list-title">Construction Waste</span>
+                <span className="list-description">all debri</span>
+              </li>
+            </ol>
+           
+          
+        </div>
+        </div>
+        <div className='community'>
+          
+         <div className='community-text'>
+          <h1>Our Commitment to the Environment</h1>
+          <p>We believe a cleaner environment starts with action. That’s why we follow eco-friendly practices, such as sorting recyclable materials, using fuel-efficient trucks, and partnering with recycling companies. Every pickup we make is a step toward a greener future.</p>
+          <button className='btna'>Donate</button>
+        </div>
+        <div className='community-img'>
+            <img src={imgc}className='imgc'/>
+          </div>
+        </div>
+        <div className='also'>  
+          <h1>We also offer</h1>
+        </div>
+          <div className="columns-container">
+             <div className="column">
+              <h3>Recycling</h3>
+               <p>Content for first column goes here...</p>
+             </div>
+        
+             <div className="column">
+              <h3>Community clean-up events</h3>
+               <p>Content for second column with potentially more text that might wrap to multiple lines</p>
+             </div>
+        
+             <div className="column">
+               <h3>Awareness campaigns on recycling and waste separation</h3>
+               <p>Short content</p>
+             </div>
+           </div>
+        
+       
+        <div className='focus'>
+          <h1>Community-Focused</h1>
+          <p>Our work goes beyond waste collection. We are proud to support schools, local businesses, and neighborhoods through clean-up drives and educational programs. We’re here to help build a cleaner community — together.</p>
+        </div>
+      
     </div>
   );
 }

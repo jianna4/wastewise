@@ -1,5 +1,245 @@
 $primary-color1:black;
 $primary-color2: #FFA500;
 .About{
-    margin-top:100px;
+    margin-top:60px;
 }
+.carousell {
+  max-width: 100%; /* Adjust this to your desired width */
+  margin: 0 auto; /* This centers the carousel */
+}
+
+.carousel {
+  border-radius: 10px; /* Optional: adds rounded corners */
+  overflow: hidden; /* Keeps the rounded corners visible */
+}
+
+.imgca {
+  width: 100%;
+  height: 440px; /* Fixed height for consistency */
+  object-fit: cover; /* Ensures images cover the area without distortion */
+}
+
+.carousel-caption {
+  text-align: left;
+  left: 5%;
+  right: auto;
+  bottom: 20%;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  //border-radius: 5px;
+  max-width: 50%; /* Limits caption width */
+  margin-top: 20px;
+}
+
+.carousel-caption h3 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.carousel-caption p {
+  font-size: 1rem;
+}
+
+/* Optional: Add transition effects */
+.carousel-item {
+  transition: transform 1s ease, opacity .5s ease;
+}
+.columns-containera {
+  display: flex; // Activates flexbox
+  gap: 2rem; // Space between columns
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  // All columns will have equal height by default
+  .column {
+    flex: 1; // Each column takes equal width
+    min-width: 0; // Prevents overflow issues
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    margin-top: 60px;
+    
+    // Content styling
+    h3 {
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+
+    }
+    
+    p {
+      color: #666;
+      line-height: 1.5;
+    }
+  }
+
+  // Responsive behavior
+  @media (max-width: 768px) {
+    flex-direction: column; // Stack on mobile
+    gap: 1rem;
+  }
+}
+.also{
+    text-align: center;
+    color:$primary-color2;
+   ;
+}
+.alldo{
+   height:400px;
+   display:flex;
+   background-color: #ffedd4;
+   width:100%;
+   display: flex;
+   flex-direction: column; // Stack on mobile
+   gap: 2rem;
+   align-items: center;
+   max-width: 1200px;
+   margin: 0 auto;
+   padding-top: 20px;
+     @media (min-width: 768px) {
+    flex-direction: row; // Side-by-side on desktop
+    align-items: center; // Align to top
+    gap: 3rem;}
+   
+}
+
+.doimg{
+    flex:1;
+    min-width: 0; // Prevents flex overflow issues
+
+    width:50%;
+    margin-left:20px;
+    display:flex;
+    align-items: flex-start;
+    margin-left: 20px;
+   
+}
+.img{
+    margin-left: 50px;
+    width:284px;
+}
+.do{
+    flex:1;
+    min-width: 0; // Prevents flex overflow issues
+    
+    flex-direction: column;
+    justify-content: flex-end;
+   
+}
+.custom-numbered-list {
+  counter-reset: custom-counter;
+  list-style: none;
+  
+  
+  li {
+    counter-increment: custom-counter;
+    margin-bottom: 25px;
+    position: relative;
+    padding-left: 60px;
+    
+    &::before {
+      content: counter(custom-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 40px;
+      height: 40px;
+      background-color: #f0f0f0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      padding-left:0px;
+    }
+  }
+  
+  .list-title {
+    display: block;
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .list-description {
+    display: block;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+}
+.columns-container {
+  display: flex; // Activates flexbox
+  gap: 2rem; // Space between columns
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  // All columns will have equal height by default
+  .column {
+    flex: 1; // Each column takes equal width
+    min-width: 0; // Prevents overflow issues
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    
+    // Content styling
+    h3 {
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+    
+    p {
+      color: #666;
+      line-height: 1.5;
+    }
+  }
+
+  // Responsive behavior
+  @media (max-width: 768px) {
+    flex-direction: column; // Stack on mobile
+    gap: 1rem;
+  }
+}
+.also{
+    text-align: center;
+    color:$primary-color2;
+   ;
+}
+.community{
+    display: flex;
+    flex-direction: row;
+    gap:1rem;
+    margin-top: 60px;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+
+}
+.community-img{
+    flex:1;
+    min-width: 0; // Prevents overflow issues
+}
+.community-text{
+    flex:1;
+    min-width: 0;
+    p{
+       font-size: 20px;
+       font-style: oblique;
+    }
+    h1{
+        color:#FFA500;
+    }
+    .btna{
+        background-color: #333;
+     color: #FFA500;
+    }
+}
+
