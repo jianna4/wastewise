@@ -1,9 +1,9 @@
 import React from 'react'
 //import '../styiling/About.scss' // Assuming you have a CSS file for styling
 import Carousel from 'react-bootstrap/Carousel';
-import img1 from '../assets/1.jpg'
-import img2 from '../assets/2.jpg'
-import img3 from '../assets/3.jpg'
+import img1 from '../assets/22.jpg'
+import img2 from '../assets/21.jpg'
+import img3 from '../assets/23.jpg'
 import {useState} from 'react'
 import '../styiling/About.scss'
 import imgb from '../assets/hey.jpg'
@@ -18,22 +18,22 @@ function About() {
           <Carousel.Item interval={3000}> {/* Adjust interval as needed */}
              <img src={img1} alt="First slide" className='imgca'/>
             <Carousel.Caption>
-              <h3>First slide label</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+              <h3>Here for you</h3>
+              <p>Our able team making sure that we leave your environment squicky clean</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item interval={3000}>
             <img src={img2} alt="Second slide" className='imgca'/>
             <Carousel.Caption>
-              <h3>Second slide label</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <h3>community service</h3>
+              <p>We organise for commuijty inclusivity.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item interval={3000}>
             <img src={img3} alt="Third slide" className='imgca'/>
             <Carousel.Caption>
-              <h3>Third slide label</h3>
-              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+              <h3>For a better earth</h3>
+              <p>yes yes yes.</p>
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
@@ -59,7 +59,7 @@ function About() {
           <div className='doo doimg'>
             <img src={imgb} className='img'/>
           </div>
-        <div className="doo do">
+        <div className="doo">
           <h1>What We Do</h1>
           <p>We collect and sort all type of waste including</p>
         
@@ -101,7 +101,7 @@ function About() {
         </div>
           <div className="columns-container">
              <div className="column">
-              <h3>Recycling</h3>
+              <h3>Recycling Services</h3>
                <p>Content for first column goes here...</p>
              </div>
         

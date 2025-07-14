@@ -33,7 +33,7 @@ $primary-color2: #FFA500;
     border:0.5px solid black;
     border-radius: 20px;
     &:hover{
-        color:darken($primary-color2, 10%);;
+        color:darken($primary-color2, 10%);
         border-color:#FFA500;
     }
     &:active{

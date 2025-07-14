@@ -31,7 +31,7 @@ admin.site.register(User, UserAdmin)
 # -------------------------------
 # Location Admins
 # -------------------------------
-class SubCountyInline(admin.TabularInline):
+class SubCountyInline(admin.TabularInline): #Creates inline editing for SubCounties within County admin
     model = SubCounty
     extra = 1
 

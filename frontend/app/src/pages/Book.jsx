@@ -68,7 +68,16 @@ function Book() {
        </ul>
        </div>
        <div className='bo rightb'>
-        hey im right
+        <ul>
+          <li className='listc'><div>UserName:</div></li>
+          <li className='listc'><div>phone-Number:</div></li>
+          <li className='listc'><div>location:</div></li>
+        </ul>
+        
+        <div className='bdiv'>
+          <button className='button' onClick={() => navigate('/book')}>submit for pickup                                
+            </button>
+        </div>
        </div>
       </div>
       

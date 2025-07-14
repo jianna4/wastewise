@@ -3,7 +3,7 @@ import '../styiling/Home.scss' // Assuming you have a CSS file for styling
 import img from '../assets/img.png'
 //import  img1 from '../assets/1.jpg'
 //import img2 from '../assets/2.jpg'
-//import img3 from '../assets/3.jpg'
+import img3 from '../assets/21.jpg'
 import anime from '../assets/anime.jpg'
 import {useNavigate} from 'react-router-dom'
 import back from '../assets/back.jpg'
@@ -38,18 +38,18 @@ function Home() {
         </div>
         <img src={back} alt='location' className='back' />
       </div>
-
+        <div className='uweh'><h1>Anywhere,anytime</h1></div>
         <div className='pickups'>
           <div className='pickup house'>
-             <h1>Home </h1>
+             
           </div>
           <div className='pickup com'>
            
-            <h1>community</h1>
+           
           </div>
           <div className='pickup app'>
 
-            <h1>appartments</h1>
+            
           </div>
         </div>
         <div className='info'>
@@ -74,7 +74,7 @@ function Home() {
           </div>
           <div className='container-right'>
             <h1>Why choose us?</h1>
-            <ul>
+            <ul className='lists'>
               <li><FaBolt className='icons'/>  Fast and reliable service</li>
               <li><FaLeaf className='icons'/>  Eco-friendly practices</li>
               <li><FaUsers className='icons'/>  Community-focused initiatives</li>
@@ -89,12 +89,10 @@ function Home() {
         <div className='based'>
           <h1 className='base'>where we are based</h1>
           <div className='based-container'>
-            <div classNmae='based-left'>
-              <img src='https://cdn-icons-png.flaticon.com/512/684/684908.png' alt='location' className='location' />
-            </div>
-            <div classNmae='based-right'>
+            
+            <div className='based-right'>
               <h2>We are located and available to allover the counties:</h2>
-              <ul>
+              <ul className='list'>
                 <li>Kericho</li>
                 <li>Nakuru</li>
                 <li>Nairobi</li>
@@ -102,6 +100,9 @@ function Home() {
                 <li>Bomet</li>
                 <li>Nyandarua</li>
               </ul>  
+            </div>
+            <div className='based-left'>
+              <img src={img3} alt='location' className='location' />
             </div>
           </div>
 
