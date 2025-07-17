@@ -137,3 +137,37 @@ def list_driver_pickups(request):
     pickups = Pickup.objects.filter(driver=request.user.driver)
     serializer = PickupSerializer(pickups, many=True)
     return Response(serializer.data)
+
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import County, SubCounty, Area
+from .serializers import CountySerializer, SubCountySerializer, AreaSerializer
+
+# County endpoints
+@api_view(['GET'])
+def list_counties(request):
+    counties = County.objects.all()
+    serializer = CountySerializer(counties, many=True)
+    return Response(serializer.data)
+
+# SubCounty endpoints
+@api_view(['GET'])
+def list_subcounties(request, county_id=None):
+    queryset = SubCounty.objects.all()
+    if county_id:
+        queryset = queryset.filter(county_id=county_id)
+    serializer = SubCountySerializer(queryset, many=True)
+    return Response(serializer.data)
+
+# Area endpoints
+@api_view(['GET'])
+def list_areas(request, subcounty_id=None):
+    queryset = Area.objects.all()
+    if subcounty_id:
+        queryset = queryset.filter(subcounty_id=subcounty_id)
+    serializer = AreaSerializer(queryset, many=True)
+    return Response(serializer.data)
+
+# Booking endpoint
