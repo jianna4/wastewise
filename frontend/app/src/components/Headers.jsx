@@ -20,6 +20,8 @@ function Header() {
             <Link className={`link ${isBook ? 'lbook' : ''}`} to="/about">About</Link>
             <Link className={`link ${isBook ? 'lbook' : ''}`} to="/contact">Contact</Link>
             <Link className={`link ${isBook ? 'lbook' : ''}`} to="/book">Book</Link>
+            <Link className={`link ${isBook ? 'lbook' : ''}`} to="/login">login</Link>
+            <Link className={`link ${isBook ? 'lbook' : ''}`} to="/signup">Signup</Link>
             
         </div>
     </div>
