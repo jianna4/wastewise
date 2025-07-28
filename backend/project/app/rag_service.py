@@ -10,7 +10,7 @@ import os
 
 def build_vectordb(file_path=""):
     loader=TextLoader(file_path)
-    doc=loader.load();
+    doc=loader.load()
 
 #lets embedd
     splitter=RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)

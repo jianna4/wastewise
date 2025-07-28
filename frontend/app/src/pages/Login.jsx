@@ -22,12 +22,16 @@ const Login = () => {
 console.log("Login component loaded ✅");
 
   return (
-    <form style={{ height: "500px",marginTop: '100px' }} onSubmit={handleSubmit}>
-      <input type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
+    <div class="bg-blue-400" >
+    <form class="bg-gray"style={{ height: "500px",marginTop: '100px' }} onSubmit={handleSubmit}>
+      <input class="bg-gray" type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} />
       <input type="password" value={form.password} onChange={e => setForm({...form, password: e.target.value})} />
      <button type="submit">Login</button>
 
     </form>
+    
+    </div>
+    
     
   );
 };

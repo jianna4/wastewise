@@ -99,7 +99,7 @@ $primary-color2: #FFA500;
    max-width: 1200px;
    margin: 0 auto;
    padding-top: 20px;
-     @media (min-width: 768px) {
+  @media (min-width: 768px) {
     flex-direction: row; // Side-by-side on desktop
     align-items: center; // Align to top
     gap: 3rem;}
