@@ -16,6 +16,7 @@ import Signup from './pages/Signup';
 import PrivateRoute from './apis/PrivateRoute';
 
 import './App.css';
+import './Atail.css';
 function App() {
   return (
     <div className="App">
