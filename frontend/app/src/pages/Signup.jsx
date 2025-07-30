@@ -3,14 +3,34 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import img1 from '../assets/img.png'
 const Signup =()=>{
-    const [form , setForm] = useState({email: '',password: ''});
+    const [form , setForm] = useState({name:'',email: '',password: '' });
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        await axios.post('http://127.0.0.1:8000/api/register/',form);
+    e.preventDefault();
+    try {
+        const response = await axios.post(
+            'http://127.0.0.1:8000/api/register/',
+            JSON.stringify({  // Add JSON.stringify
+                name: form.name,
+                email: form.email,
+                password: form.password,
+            }),
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
         navigate('/login');
-    };
+    } 
+    catch (err) {
+        console.error("Registration error:", err.response?.data);
+        alert(err.response?.data?.error || "Registration failed");
+    }
+    }
+
+    
 
     return(
         
@@ -24,6 +44,7 @@ const Signup =()=>{
     
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form action="#" method="POST" class="space-y-6" onSubmit={handleSubmit}>
+         
           <div>
             <label for="email" class="block text-sm/6 font-medium text-gray-900">Email address</label>
             <div class="mt-2">
@@ -44,7 +65,13 @@ const Signup =()=>{
               value={form.password} onChange={e => setForm({...form, password: e.target.value})}/>
             </div>
           </div>
-    
+           <div>
+            <label for="email" class="block text-sm/6 font-medium text-gray-900">Name</label>
+            <div class="mt-2">
+              <input id="email" type="text" name="name" required autocomplete="text" class="block w-full rounded-md bg-orange-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-orange-50 sm:text-sm/6" 
+              value={form.name} onChange={e => setForm({...form, name: e.target.value})}/>
+            </div>
+          </div>
           <div>
             <button type="submit" class="flex w-full justify-center rounded-md bg-orange-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-orange-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600">Signup</button>
           </div>
@@ -59,5 +86,5 @@ const Signup =()=>{
     
         </div>
 );
-}
+};
 export default Signup;

@@ -18,7 +18,7 @@ from .serializers import (
 def register_user(request):
     email = request.data.get("email")
     password = request.data.get("password")
-    name = request.data.get("name")
+    name = request.data.get("name","")
 
     if not email or not password:
         return Response({"error": "Email and password required"}, status=400)
@@ -40,9 +40,10 @@ def register_user(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_user(request):
+    print("Received data:", request.data)
     email = request.data.get("email")
     password = request.data.get("password")
-    user = authenticate(request, email=email, password=password)
+    user = authenticate(request, email=email, password=password )
 
     if user:
         refresh = RefreshToken.for_user(user)
