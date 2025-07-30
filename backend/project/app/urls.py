@@ -14,4 +14,9 @@ urlpatterns = [
     # Booking endpoints
     path('bookings/create/', views.create_booking, name='create_booking'),
     path('bookings/', views.list_user_bookings, name='list_user_bookings'),
+
+    #location endpoints
+    path('counties/', views.list_counties, name='list_counties'),
+    path('counties/<int:county_id>/subcounties/', views.list_subcounties, name='list_subcounties'),
+    path('subcounties/<int:subcounty_id>/areas/', views.list_areas, name='list_areas'),
 ]
