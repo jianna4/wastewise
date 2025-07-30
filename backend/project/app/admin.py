@@ -72,7 +72,7 @@ admin.site.register(Driver, DriverAdmin)
 # Booking Admin
 # -------------------------------
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'area', 'pickup_date', 'is_completed')
+    list_display = ('user', 'area','latitude','longitude','address','raw_response', 'pickup_date', 'is_completed')
     list_filter = ('pickup_date', 'is_completed', 'area__subcounty__county')
     search_fields = ('user__email', 'area__name')
 

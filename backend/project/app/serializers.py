@@ -68,7 +68,8 @@ class BookingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['id', 'user', 'user_id', 'area', 'area_id', 'pickup_date', 'is_completed']
+        fields = ['id', 'user', 'user_id', 'area', 'area_id', 'latitude', 'longitude',
+            'address', 'raw_response','pickup_date', 'is_completed']
 
 # -------------------------------
 # Pickup Serializer

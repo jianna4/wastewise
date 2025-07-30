@@ -81,6 +81,10 @@ def login_driver(request):
 def create_booking(request):
     area_id = request.data.get("area_id")
     pickup_date = request.data.get("pickup_date")
+    latitude = request.data.get("latitude")
+    longitude = request.data.get("longitude")
+    address = request.data.get("address")
+    raw_response = request.data.get("raw_response")
 
     try:
         area = Area.objects.get(id=area_id)
@@ -90,7 +94,11 @@ def create_booking(request):
     booking = Booking.objects.create(
         user=request.user,
         area=area,
-        pickup_date=pickup_date
+        pickup_date=pickup_date,
+        latitude=latitude,
+        longitude=longitude,
+        address=address,
+        raw_response=raw_response , # can be dict if JSONField
     )
     return Response(BookingSerializer(booking).data, status=201)
 
