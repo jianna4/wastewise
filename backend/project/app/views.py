@@ -122,7 +122,7 @@ def complete_pickup(request, booking_id):
         return Response({"error": "Only drivers can complete pickups"}, status=403)
 
     try:
-        booking = Booking.objects.get(id=booking_id, is_completed=False)
+        booking = Booking.objects.get(id=booking_id, is_completed=True)
     except Booking.DoesNotExist:
         return Response({"error": "Booking not found or already completed"}, status=404)
 

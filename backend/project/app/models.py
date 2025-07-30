@@ -106,6 +106,10 @@ class Pickup(models.Model):
     completed_at = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):
+        # 1. Mark booking as complete before saving pickup
+        if not self.booking.is_completed:
+            self.booking.is_completed = True
+            self.booking.save(update_fields=['is_completed'])
         super().save(*args, **kwargs)
         # Award star to user
         user = self.booking.user
