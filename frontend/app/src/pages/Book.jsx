@@ -1,239 +1,275 @@
-import React from 'react'
-//import '../styiling/Contact.jsx' // Assuming you have a CSS file for styling
-import {useState,useEffect} from 'react'
-import img from '../assets/tru.jpg'
-import '../styiling/Book.scss'
+import React from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-function Book() {
-  const[location,setLocation]=useState(null);
-  const[address,setAddress]=useState('');
-  const[error,setError]=useState(null);
 
-  // 1. State for data fetched from backend
+function Book() {
+  const [location, setLocation] = useState(null);
+  const [address, setAddress] = useState('');
+  const [error, setError] = useState(null);
   const [counties, setCounties] = useState([]);
   const [subcounties, setSubcounties] = useState([]);
   const [areas, setAreas] = useState([]);
-
-  // 2. State for what user selects
   const [selectedCounty, setSelectedCounty] = useState("");
   const [selectedSubcounty, setSelectedSubcounty] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
   const [pickupDate, setPickupDate] = useState("");
   const [rawResponse, setRawResponse] = useState("");
 
-   // --- Fetch Counties on Page Load ---
+  // Fetch Counties on Page Load
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/counties/")
-      .then((res) => {
-        setCounties(res.data); // Store counties in state
-      })
+      .then((res) => setCounties(res.data))
       .catch((err) => console.error(err));
   }, []); 
 
-   // --- Fetch Subcounties when County changes ---
+  // Fetch Subcounties when County changes
   useEffect(() => {
     if (selectedCounty) {
       axios.get(`http://127.0.0.1:8000/api/counties/${selectedCounty}/subcounties/`)
         .then((res) => {
-          setSubcounties(res.data); // Store subcounties
-          setAreas([]); // Reset areas when county changes
-          setSelectedSubcounty(""); // Clear subcounty selection
-          setSelectedArea(""); // Clear area selection
+          setSubcounties(res.data);
+          setAreas([]);
+          setSelectedSubcounty("");
+          setSelectedArea("");
         })
         .catch((err) => console.error(err));
     } else {
       setSubcounties([]);
       setAreas([]);
     }
-  }, [selectedCounty]); // Runs every time selectedCounty changes
+  }, [selectedCounty]);
 
-  // --- Fetch Areas when Subcounty changes ---
+  // Fetch Areas when Subcounty changes
   useEffect(() => {
     if (selectedSubcounty) {
       axios.get(`http://127.0.0.1:8000/api/subcounties/${selectedSubcounty}/areas/`)
         .then((res) => {
-          setAreas(res.data); // Store areas
-          setSelectedArea(""); // Clear area selection
+          setAreas(res.data);
+          setSelectedArea("");
         })
         .catch((err) => console.error(err));
     } else {
       setAreas([]);
     }
-  }, [selectedSubcounty]); // Runs every time selectedSubcounty changes
+  }, [selectedSubcounty]);
 
-  const getUserLocation=()=>{
-    if(navigator.geolocation){
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position)=>{
-          const{latitude:lat,longitude:lng}=position.coords;
-          setLocation({lat,lng});
-          reversepoints(lat,lng);
-        },//you need to add a commaafter every callback
-        (err)=>{
-          
-          setError(`eror is: ${err.mesage}`);
+        (position) => {
+          const { latitude: lat, longitude: lng } = position.coords;
+          setLocation({ lat, lng });
+          reversepoints(lat, lng);
         },
-        {enableHighAccuracy:true, timeout:10000, maximumAge:0}
+        (err) => setError(`error is: ${err.message}`),
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    } else {
+      setError('geolocation is not supported in this location');
+      alert('geolocation is not supported in this location');
+    }
+  };
 
-      )
-    }
-    else{
-      setError('geolocation is not supported in this location')
-      alert('geolocation is not supported in this location')
-      
-    }
-  }
-  const reversepoints=async(lat,lng)=>{
-    try{
-      const responce=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-      const data= await responce.json()
+  const reversepoints = async (lat, lng) => {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      const data = await response.json();
       if (data.address) {
         setAddress(formatAddress(data.address));
       }
-    }
-    catch(err){
-      setAddress(formatAddress(data.address));
+    } catch (err) {
       setError("Could not retrieve address details");
     }
-  }
+  };
+
   const formatAddress = (address) => {
-    // Format the address as needed
     const parts = [];
     if (address.road) parts.push(address.road);
     if (address.house_number) parts.push(address.house_number);
     if (address.city || address.town || address.village) parts.push(address.city || address.town || address.village);
     if (address.country) parts.push(address.country);
-    
     return parts.join(', ');
   };
-  const manualLoction=(e)=>{
-    e.preventDefault();//t make sure page doesnt reload
-  }
+
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    if (!selectedArea || !pickupDate || !location) {
+      alert("Please select area, pickup date, and allow location");
+      return;
+    }
 
-  // Validation
-  if (!selectedArea || !pickupDate || !location) {
-    alert("Please select area, pickup date, and allow location");
-    return;
-  }
+    const payload = {
+      area_id: selectedArea,
+      pickup_date: pickupDate,
+      latitude: location.lat,
+      longitude: location.lng,
+      address: address,
+      rawResponse: rawResponse, // Include raw response for debugging
+    };
 
-  const payload = {
-    area_id: selectedArea,
-    pickup_date: pickupDate,
-    latitude: location.lat,
-    longitude: location.lng,
-    address: address,
+    try {
+      const res = await axios.post("http://127.0.0.1:8000/api/bookings/create/", payload, {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem('access')}`,
+          "Content-Type": "application/json",
+        },
+      });
+      alert("Booking created successfully!");
+      console.log(res.data);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to create booking");
+    }
   };
 
-  try {
-    const res = await axios.post("http://127.0.0.1:8000/api/bookings/create/", payload, {
-      headers: {
-        "Authorization": `Bearer ${localStorage.getItem('access')}`,
-    "Content-Type": "application/json",
-      },
-    });
-
-    alert("Booking created successfully!");
-    console.log(res.data);
-  } catch (err) {
-    console.error(err);
-    alert("Failed to create booking");
-  }
-};
-
   return (
-  <div className='book'>
-    <div className='containerb'>
-      
-      <div className='book-containerb'>
-       <div className='bo leftb'>
-       <h2>welcome dear user</h2>
-       <p>book a collection and get to expirience a smooth ride cleaning your environment</p>
-       <ul>
-        <li></li>
-       </ul>
-       </div>
-       <div>
-        <form onSubmit={handleSubmit}>
-  {/* County Dropdown */}
-  <select value={selectedCounty} onChange={(e) => setSelectedCounty(e.target.value)}>
-    <option value="">Select County</option>
-    {counties.map((county) => (
-      <option key={county.id} value={county.id}>
-        {county.name}
-      </option>
-    ))}
-  </select>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 ">
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden mt-10">
+        <div className="md:flex">
+          {/* Left side - Orange background */}
+          <div className="bg-orange-500 text-white p-8 md:w-1/3">
+            <h2 className="text-2xl font-bold mb-4">Welcome dear user</h2>
+            <p className="mb-6">Book a collection and get to experience a smooth ride cleaning your environment</p>
+            
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <div className="flex-shrink-0 h-6 w-6 text-white mr-2">✓</div>
+                <p>Easy booking process</p>
+              </div>
+              <div className="flex items-start">
+                <div className="flex-shrink-0 h-6 w-6 text-white mr-2">✓</div>
+                <p>Reliable service</p>
+              </div>
+              <div className="flex items-start">
+                <div className="flex-shrink-0 h-6 w-6 text-white mr-2">✓</div>
+                <p>Environmentally friendly</p>
+              </div>
+            </div>
+          </div>
 
-  {/* Subcounty Dropdown */}
-  <select
-    value={selectedSubcounty}
-    onChange={(e) => setSelectedSubcounty(e.target.value)}
-    disabled={!selectedCounty}
-  >
-    <option value="">Select Subcounty</option>
-    {subcounties.map((subcounty) => (
-      <option key={subcounty.id} value={subcounty.id}>
-        {subcounty.name}
-      </option>
-    ))}
-  </select>
+          {/* Right side - White background with form */}
+          <div className="p-8 md:w-2/3">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* County Dropdown */}
+              <div>
+                <label htmlFor="county" className="block text-sm font-medium text-gray-700 mb-1">County</label>
+                <select
+                  id="county"
+                  value={selectedCounty}
+                  onChange={(e) => setSelectedCounty(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                >
+                  <option value="">Select County</option>
+                  {counties.map((county) => (
+                    <option key={county.id} value={county.id}>
+                      {county.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-  {/* Area Dropdown */}
-  <select
-    value={selectedArea}
-    onChange={(e) => setSelectedArea(e.target.value)}
-    disabled={!selectedSubcounty}
-  >
-    <option value="">Select Area</option>
-    {areas.map((area) => (
-      <option key={area.id} value={area.id}>
-        {area.name}
-      </option>
-    ))}
-  </select>
+              {/* Subcounty Dropdown */}
+              <div>
+                <label htmlFor="subcounty" className="block text-sm font-medium text-gray-700 mb-1">Subcounty</label>
+                <select
+                  id="subcounty"
+                  value={selectedSubcounty}
+                  onChange={(e) => setSelectedSubcounty(e.target.value)}
+                  disabled={!selectedCounty}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50"
+                >
+                  <option value="">Select Subcounty</option>
+                  {subcounties.map((subcounty) => (
+                    <option key={subcounty.id} value={subcounty.id}>
+                      {subcounty.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-  {/* Pickup Date */}
-  <input
-    type="date"
-    value={pickupDate}
-    onChange={(e) => setPickupDate(e.target.value)}
-  />
+              {/* Area Dropdown */}
+              <div>
+                <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1">Area</label>
+                <select
+                  id="area"
+                  value={selectedArea}
+                  onChange={(e) => setSelectedArea(e.target.value)}
+                  disabled={!selectedSubcounty}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50"
+                >
+                  <option value="">Select Area</option>
+                  {areas.map((area) => (
+                    <option key={area.id} value={area.id}>
+                      {area.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-  {/* Get Location */}
-  <button type="button" onClick={getUserLocation}>
-    Get My Location
-  </button>
+              {/* Pickup Date */}
+              <div>
+                <label htmlFor="pickupDate" className="block text-sm font-medium text-gray-700 mb-1">Pickup Date</label>
+                <input
+                  type="date"
+                  id="pickupDate"
+                  value={pickupDate}
+                  onChange={(e) => setPickupDate(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
 
-  {/* Show location details */}
-  {location && (
-    <p>
-      Latitude: {location.lat}, Longitude: {location.lng}
-    </p>
-  )}
-  {address && <p>Address: {address}</p>}
-  <textarea
-    value={rawResponse}
-    onChange={(e) => setRawResponse(e.target.value)}
-    rows={6}
-    style={{ width: "100%" }}
-    placeholder="Raw API response will appear here"
-  />
-
-  {/* Submit Booking */}
-  <button type="submit">Submit Booking</button>
-</form>
-
-       </div>
-        
+              {/* Location Section */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={getUserLocation}
+                  className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                >
+                  Get My Location
+                </button>
+                
+                {location && (
+                  <div className="mt-3 p-3 bg-gray-50 rounded-md">
+                    <p className="text-sm text-gray-700">
+                      Latitude: {location.lat}, Longitude: {location.lng}
+                    </p>
+                    {address && (
+                      <p className="text-sm text-gray-700 mt-1">
+                        Address: {address}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+              {/* Textarea for Raw API Response */}
+              <div>
+                <label htmlFor="rawResponse" className="block text-sm font-medium text-gray-700 mb-1">
+                  Additional location info
+                </label>
+                <textarea
+                  id="rawResponse"
+                  value={rawResponse}
+                  onChange={(e) => setRawResponse(e.target.value)}
+                  rows={4}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  placeholder="additional response will appear here"
+                />
+              </div>
+              {/* Submit Button */}
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                >
+                  Submit Booking
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-      
-       </div>
-       <div className='space'>
-     </div>
-  </div>
-  )
+    </div>
+  );
 }
 
-export default Book
+export default Book;

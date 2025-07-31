@@ -8,9 +8,7 @@ $primary-color2: #FFA500;
     margin-top:0px;
     padding-top: 0px;
     margin:0;
-    &.book{
-        background-color: transparent;
-    }
+   
  
 }
 .right-header{
@@ -39,9 +37,9 @@ $primary-color2: #FFA500;
     &:active{
         border-color:#FFA500;
     }
-    &.lbook{
-        color:darken($primary-color1, 100%)
-    }
+   // &.lbook{
+   //     color:darken($primary-color1, 100%)
+   // }
 }
 .left-header{
     color:#FFA500;
@@ -52,9 +50,9 @@ $primary-color2: #FFA500;
     justify-content: flex-start;
     gap:20px;
 
-    &.header-book{
-        color:darken($primary-color1, 10%)
-    }
+   // &.header-book{
+    //    color:darken($primary-color1, 10%)
+    //}
     h1{
         bottom:0;
 

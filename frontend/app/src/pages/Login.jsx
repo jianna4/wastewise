@@ -22,7 +22,7 @@ const Login = () => {
 console.log("Login component loaded ✅");
 
   return (
-    <div  >
+    <div className="bg-gray-100" >
     
     <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">

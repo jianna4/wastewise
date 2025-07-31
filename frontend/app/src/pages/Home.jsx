@@ -22,9 +22,10 @@ import {
 function Home() {
   const navigate = useNavigate()
   return (
-    <div className='Home'>
-      <div className='container'>
-        <div className='left'>
+    <div className=' bg-gray-100'>
+      <div className="  min-h-screen w-full bg-cover bg-no-repeat bg-center bg-fixed mt:10 flex flex-col md:flex-row justify-center items-center p-8"
+           style={{ backgroundImage: `url(${back})` }}>
+        <div className='left mt-20'>
           <h1>Fast,Reliable & clean Garbage collection</h1>
           <p>book to get your gabage collected today,lets build a cleaner world one pick upat a time.</p>
           <div className='bdiv'>
@@ -36,60 +37,64 @@ function Home() {
           <img src={img} alt='Home' className='img0' />
 
         </div>
-        <img src={back} alt='location' className='back' />
+        
       </div>
         <div className='uweh'><h1>Anywhere,anytime</h1></div>
-        <div className='pickups'>
-          <div className='pickup house'>
+        <div className=' grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 '>
+          <div className='pickup house shadow-lg rounded-lg'>
              
           </div>
-          <div className='pickup com'>
+          <div className='pickup com shadow-lg rounded-lg'>
            
            
           </div>
-          <div className='pickup app'>
+          <div className='pickup app shadow-lg rounded-lg'>
 
             
           </div>
         </div>
-        <div className='info'>
+        <div className='flex flex-col sm:flex-row md:flex-row justify-between items-center p-8 bg-[#ffedd4] mb-2 gap-8 mt-8'>
           <div clasName='info1'>
             <h3>Making a cleaner world with every pickup</h3>
             <p>We are committed to providing fast, reliable, and clean garbage collection services to help keep our communities clean and healthy.</p>
             <div  className='bdiv'><button className='button' onClick={() => navigate('/about')}>Learn more</button></div>
           </div>
-          <div className='info2'>
-            <ul>
-              <li><FaWineBottle title="Plastic Waste" className='icon' /> plastic waste</li>
-              <li><FaAppleAlt title="food waste" className='icon'/> food waste</li>
-              <li><FaLaptop title="e-waste"className='icon'/>e-waste</li>
-              <li><FaRadiationAlt tittle="harzadious"className='icon'/> hazardous waste</li>
-              <li><FaBuilding title="construction"className='icon'/> construction waste</li>
+          <div className='info2 bg-white p-8 rounded-xl shadow-lg'>
+            <h3>We collect all types of waste:</h3>
+            <ul className='mt-4'>
+              <li className="flex align-center gap-3"><FaWineBottle title="Plastic Waste" className='icon' /> plastic waste</li>
+              <li className="flex align-center gap-3"><FaAppleAlt title="food waste" className='icon'/> food waste</li>
+              <li className="flex align-center gap-3"><FaLaptop title="e-waste"className='icon'/>e-waste</li>
+              <li className="flex align-center gap-3"><FaRadiationAlt tittle="harzadious"className='icon'/> hazardous waste</li>
+              <li className="flex align-center gap-3"><FaBuilding title="construction"className='icon'/> construction waste</li>
             </ul>
           </div>
         </div>
-        <div className='container2'>
-          <div className='container-left'>
-            <img src={anime} alt='Home' className='anime' />
-          </div>
+        <div className='container2 flex flex-col sm:flex-row md:flex-row justify-between items-center p-8 bg-[#f0f4f8] mb-2 mt-8'>
+         
           <div className='container-right'>
             <h1>Why choose us?</h1>
-            <ul className='lists'>
-              <li><FaBolt className='icons'/>  Fast and reliable service</li>
-              <li><FaLeaf className='icons'/>  Eco-friendly practices</li>
-              <li><FaUsers className='icons'/>  Community-focused initiatives</li>
-              <li><FaUserTie className='icons'/>  Experienced and professional team</li>
-              <li><FaTag className='icons'/>  Affordable pricing</li>
-              <li><FaCalendarAlt className='icons'/>  Flexible scheduling options</li>
-              <li><FaSmile className='icons'/>  Customer satisfaction guaranteed</li>
+            <ul className='lists mt-4'>
+              <li className="flex align-center gap-3"><FaBolt className='icons'/>  Fast and reliable service</li>
+              <li className="flex align-center gap-3"><FaLeaf className='icons'/>  Eco-friendly practices</li>
+              <li className="flex align-center gap-3"><FaUsers className='icons'/>  Community-focused initiatives</li>
+              <li className="flex align-center gap-3"><FaUserTie className='icons'/>  Experienced and professional team</li>
+              <li className="flex align-center gap-3"><FaTag className='icons'/>  Affordable pricing</li>
+              <li className="flex align-center gap-3"><FaCalendarAlt className='icons'/>  Flexible scheduling options</li>
+              <li className="flex align-center gap-3"><FaSmile className='icons'/>  Customer satisfaction guaranteed</li>
             </ul>
+          </div>
+           <div className='container-left'>
+            <img src={anime} alt='Home' className='anime' />
           </div>
 
         </div>
         <div className='based'>
           <h1 className='base'>where we are based</h1>
-          <div className='based-container'>
-            
+          <div className='based-container mt-6'>
+            <div className='based-left'>
+              <img src={img3} alt='location' className='location' />
+            </div>
             <div className='based-right'>
               <h2>We are located and available to allover the counties:</h2>
               <ul className='list'>
@@ -101,9 +106,7 @@ function Home() {
                 <li>Nyandarua</li>
               </ul>  
             </div>
-            <div className='based-left'>
-              <img src={img3} alt='location' className='location' />
-            </div>
+            
           </div>
 
         </div>
