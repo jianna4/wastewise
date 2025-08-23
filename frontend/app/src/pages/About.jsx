@@ -10,27 +10,43 @@ import imgb from '../assets/hey.jpg'
 import imgc from '../assets/anime.jpg'
 
 function About() {
- 
+ const items = [
+    {
+      id: 1,
+      title: "First Item",
+      image: "https://via.placeholder.com/150"
+    },
+    {
+      id: 2,
+      title: "Second Item",
+      image: "https://via.placeholder.com/150"
+    },
+    {
+      id: 3,
+      title: "Third Item",
+      image: "https://via.placeholder.com/150"
+    }
+  ];
   return (
     <div className='About'>
-      <div className='carousell'>
+      <div className='w-full h-screen overflow-hidden'>
          <Carousel fade> {/* Add 'fade' for fade transition instead of slide */}
           <Carousel.Item interval={3000}> {/* Adjust interval as needed */}
-             <img src={img1} alt="First slide" className='imgca'/>
+             <img src={img1} alt="First slide" className='w-full h-screen object-cover object-center'/>
             <Carousel.Caption>
               <h3>Here for you</h3>
               <p>Our able team making sure that we leave your environment squicky clean</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item interval={3000}>
-            <img src={img2} alt="Second slide" className='imgca'/>
+            <img src={img2} alt="Second slide" className='w-full h-screen object-cover object-center'/>
             <Carousel.Caption>
               <h3>community service</h3>
               <p>We organise for commuijty inclusivity.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item interval={3000}>
-            <img src={img3} alt="Third slide" className='imgca'/>
+            <img src={img3} alt="Third slide" className='w-full h-screen object-cover object-center'/>
             <Carousel.Caption>
               <h3>For a better earth</h3>
               <p>yes yes yes.</p>
@@ -55,13 +71,13 @@ function About() {
              </div>
            </div>
         
-        <div className='alldo'>
-          <div className='doo doimg'>
+        <div className=' flex flex-col md:flex-row bg-[#ffedd4]'>
+          <div className='doo doimg w-full md:w-1/2'>
             <img src={imgb} className='img'/>
           </div>
-        <div className="doo">
-          <h1>What We Do</h1>
-          <p>We collect and sort all type of waste including</p>
+        <div className="doo w-full md:w-1/2 flex flex-col justify-center">
+          <h1 className="text-center">What We Do</h1>
+          <p className="text-center md:text-start">We collect and sort all type of waste including</p>
         
             <ol className="custom-numbered-list">
               <li>

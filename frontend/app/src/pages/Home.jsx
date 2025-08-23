@@ -23,17 +23,17 @@ function Home() {
   const navigate = useNavigate()
   return (
     <div className=' bg-gray-100'>
-      <div className="  min-h-screen w-full bg-cover bg-no-repeat bg-center bg-fixed mt:10 flex flex-col md:flex-row justify-center items-center p-8"
+      <div className="  min-h-screen w-full bg-cover bg-no-repeat bg-center bg-fixed mt:10 flex flex-col md:justify-center  md:flex-row  items-center p-8"
            style={{ backgroundImage: `url(${back})` }}>
-        <div className='left mt-20'>
+        <div className=' mt-20 text-center w-full md:w-1/2 '>
           <h1>Fast,Reliable & clean Garbage collection</h1>
           <p>book to get your gabage collected today,lets build a cleaner world one pick upat a time.</p>
           <div className='bdiv'>
-          <button className='button' onClick={() => navigate('/book')}>Book a pickup
+          <button className='button bg-[#FFA500]' onClick={() => navigate('/book')}>Book a pickup
             </button>
             </div>
         </div>
-        <div className='right'>
+        <div className=' w-full md:w-1/2  mt-8 md:mt-0'>
           <img src={img} alt='Home' className='img0' />
 
         </div>
@@ -41,28 +41,28 @@ function Home() {
       </div>
         <div className='uweh'><h1>Anywhere,anytime</h1></div>
         <div className=' grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 '>
-          <div className='pickup house shadow-lg rounded-lg'>
+          <div className=' house shadow-lg rounded-lg'>
              
           </div>
-          <div className='pickup com shadow-lg rounded-lg'>
+          <div className=' com shadow-lg rounded-lg'>
            
            
           </div>
-          <div className='pickup app shadow-lg rounded-lg'>
+          <div className=' app shadow-lg rounded-lg'>
 
             
           </div>
         </div>
         <div className='flex flex-col sm:flex-row md:flex-row justify-between items-center p-8 bg-[#ffedd4] mb-2 gap-8 mt-8'>
-          <div clasName='info1'>
+          <div clasName=''>
             <h3>Making a cleaner world with every pickup</h3>
             <p>We are committed to providing fast, reliable, and clean garbage collection services to help keep our communities clean and healthy.</p>
             <div  className='bdiv'><button className='button' onClick={() => navigate('/about')}>Learn more</button></div>
           </div>
-          <div className='info2 bg-white p-8 rounded-xl shadow-lg'>
+          <div className='w-full  bg-white p-8 rounded-xl shadow-lg'>
             <h3>We collect all types of waste:</h3>
             <ul className='mt-4'>
-              <li className="flex align-center gap-3"><FaWineBottle title="Plastic Waste" className='icon' /> plastic waste</li>
+              <li className="flex align-center gap-3 "><FaWineBottle title="Plastic Waste" className='bg-orange-50' /> plastic waste</li>
               <li className="flex align-center gap-3"><FaAppleAlt title="food waste" className='icon'/> food waste</li>
               <li className="flex align-center gap-3"><FaLaptop title="e-waste"className='icon'/>e-waste</li>
               <li className="flex align-center gap-3"><FaRadiationAlt tittle="harzadious"className='icon'/> hazardous waste</li>
@@ -70,9 +70,9 @@ function Home() {
             </ul>
           </div>
         </div>
-        <div className='container2 flex flex-col sm:flex-row md:flex-row justify-between items-center p-8 bg-[#f0f4f8] mb-2 mt-8'>
+        <div className=' flex flex-col  md:flex-row justify-center items-center p-8 bg-[#f0f4f8] mb-2 mt-8'>
          
-          <div className='container-right'>
+          <div className='w-full md:w-1/2'>
             <h1>Why choose us?</h1>
             <ul className='lists mt-4'>
               <li className="flex align-center gap-3"><FaBolt className='icons'/>  Fast and reliable service</li>
@@ -84,19 +84,19 @@ function Home() {
               <li className="flex align-center gap-3"><FaSmile className='icons'/>  Customer satisfaction guaranteed</li>
             </ul>
           </div>
-           <div className='container-left'>
-            <img src={anime} alt='Home' className='anime' />
+           <div className='w-full md:w-1/2 mt-8 md:mt-0'>
+            <img src={anime} alt='Home' className='' />
           </div>
 
         </div>
-        <div className='based'>
+        <div className=''>
           <h1 className='base'>where we are based</h1>
-          <div className='based-container mt-6'>
-            <div className='based-left'>
-              <img src={img3} alt='location' className='location' />
+          <div className=' flex flex-col md:flex-row justify-start md:gap-6 items-center p-8 bg-[#f0f4f8] mb-2 mt-8'>
+            <div className=' w-full md:w-1/2'>
+              <img src={img3} alt='location' className='rounded-xl' />
             </div>
-            <div className='based-right'>
-              <h2>We are located and available to allover the counties:</h2>
+            <div className='w-full md:w-1/2'>
+              <h2 className='w-full mt-2'>We are located and available to allover the counties:</h2>
               <ul className='list'>
                 <li>Kericho</li>
                 <li>Nakuru</li>

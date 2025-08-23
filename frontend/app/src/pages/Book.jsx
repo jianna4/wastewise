@@ -124,10 +124,10 @@ function Book() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 ">
-      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden mt-10">
+      <div className="w-full max-w-4xl bg-white rounded-lg  shadow-lg overflow-hidden mt-14">
         <div className="md:flex">
           {/* Left side - Orange background */}
-          <div className="bg-orange-500 text-white p-8 md:w-1/3">
+          <div className="bg-[#FFA500] text-white p-8 md:w-1/3">
             <h2 className="text-2xl font-bold mb-4">Welcome dear user</h2>
             <p className="mb-6">Book a collection and get to experience a smooth ride cleaning your environment</p>
             
@@ -223,7 +223,7 @@ function Book() {
                 <button
                   type="button"
                   onClick={getUserLocation}
-                  className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                  className="w-full bg-[#FFA500] text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
                 >
                   Get My Location
                 </button>
@@ -259,7 +259,7 @@ function Book() {
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                  className="w-full bg-[#FFA500] text-white py-2 px-4 rounded-md hover:bg-orange-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
                 >
                   Submit Booking
                 </button>
