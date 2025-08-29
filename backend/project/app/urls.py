@@ -19,4 +19,7 @@ urlpatterns = [
     path('counties/', views.list_counties, name='list_counties'),
     path('counties/<int:county_id>/subcounties/', views.list_subcounties, name='list_subcounties'),
     path('subcounties/<int:subcounty_id>/areas/', views.list_areas, name='list_areas'),
+
+    #rag endpoints
+     path("ask/", views.ask_question, name="ask_question"),
 ]

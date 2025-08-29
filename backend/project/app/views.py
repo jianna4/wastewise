@@ -180,3 +180,15 @@ def list_areas(request, subcounty_id=None):
     return Response(serializer.data)
 
 # Booking endpoint
+
+@api_view(['POST'])
+def ask_question(request):
+    question = request.data.get("question")
+    if not question:
+        return Response({"error": "Question is required"}, status=400)
+
+    # Call your retrieval function here
+    from .waster.retrieval import qa_chain
+    result = qa_chain({"query": question})
+    answer = result.get('result', 'No answer found')
+   
