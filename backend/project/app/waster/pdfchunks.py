@@ -4,7 +4,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 import json
 
-pdf_path = r"F:\projects\wasteRAG\fol\waster\WasteWise_Company_Profile.pdf"
+pdf_path = r"F:\projects\wastewise\backend\project\app\waster\WasteWise_Company_Profile.pdf"
 loader = PyPDFLoader(pdf_path)
 
 docs = loader.load()

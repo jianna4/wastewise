@@ -1,13 +1,14 @@
 from langchain.vectorstores import FAISS
 import json
 import os
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
 
 from langchain.schema import Document
 
 
 
-with open(r"F:\projects\wasteRAG\fol\waster\chunkkk.json", "r", encoding="utf-8") as f:
+with open(r"F:\projects\wastewise\backend\project\app\waster\chunkkk.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
 # Convert back to Document objects

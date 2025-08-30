@@ -1,8 +1,10 @@
 from langchain.chains import RetrievalQA
 
 from langchain.vectorstores import FAISS
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
 from langchain.llms import Ollama
+from langchain_community.llms import HuggingFaceHub
 
 #from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
@@ -10,11 +12,11 @@ import os
 
 load_dotenv()
 
-api_key = os.getenv("OPENAI_API_KEY")
+api_key = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 
 embeddings=HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-vectorstore = FAISS.load_local(r"F:\projects\wasteRAG\fol\waster\faiss_indexxx", embeddings,allow_dangerous_deserialization=True)
+vectorstore = FAISS.load_local(r"F:\projects\wastewise\backend\project\app\waster\faiss_indexxx", embeddings,allow_dangerous_deserialization=True)
 
 
 #now the retriever
@@ -22,11 +24,14 @@ vectorstore = FAISS.load_local(r"F:\projects\wasteRAG\fol\waster\faiss_indexxx",
 retriever = vectorstore.as_retriever()
 
 # Initialize OpenAI LLM
-#llm = ChatOpenAI( model="gpt-4o-mini",  temperature=0, api_key=api_key     )
-
+llm = HuggingFaceHub(
+    repo_id="mistralai/Mistral-7B-Instruct-v0.2",  # 👈 pick your model
+    model_kwargs={"temperature": 0, "max_length": 512},
+    huggingfacehub_api_token=api_key   # 👈 same style as your OpenAI example
+)
 #create the qa chain
 qa_chain = RetrievalQA.from_chain_type(
-    llm=Ollama(model="tinyllama"),
+    llm=llm,
     chain_type="stuff",
     retriever=retriever,
     return_source_documents=True
