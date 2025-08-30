@@ -27,6 +27,21 @@ function About() {
       image: "https://via.placeholder.com/150"
     }
   ];
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
+
+  const askBackend = async () => {//using function to make api call to backend not useeffect coz we want t use it whn you clickbutton ask
+    const res = await fetch("http://127.0.0.1:8000/ask/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",//tells the backend that we are sending json data
+      },
+      body: JSON.stringify({ question }),//converts the question to a json string
+    });
+    const data = await res.json();//parse the json response from the backend
+    setAnswer(data.answer || "No answer found");
+  };
+
   return (
     <div className='About'>
       <div className='w-full h-screen overflow-hidden'>
@@ -53,6 +68,17 @@ function About() {
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
+        </div>
+        <div>
+          <h1>Ask WasteRAG</h1>
+      <input
+        type="text"
+        value={question}
+        onChange={(e) => setQuestion(e.target.value)}
+        placeholder="Ask me something..."
+      />
+      <button onClick={askBackend}>Ask</button>
+      <p><b>Answer:</b> {answer}</p>
         </div>
         <div className="columns-containera">
              <div className="column">
