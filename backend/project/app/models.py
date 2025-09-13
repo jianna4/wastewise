@@ -111,7 +111,7 @@ class Pickup(models.Model):
             self.booking.is_completed = True
             self.booking.save(update_fields=['is_completed'])
         super().save(*args, **kwargs)
-        # Award star to user
+        # Award star to users
         user = self.booking.user
         user.stars += 1
         user.save()

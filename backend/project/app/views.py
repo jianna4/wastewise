@@ -9,7 +9,7 @@ from .serializers import (
     UserSerializer, DriverSerializer,
     BookingSerializer, PickupSerializer
 )
-from .waster.retrieval import qa_chain
+#from .waster.retrieval import qa_chain
 # -------------------------------
 # Register User
 # -------------------------------
@@ -181,21 +181,21 @@ def list_areas(request, subcounty_id=None):
 
 # Booking endpoint
 
-@api_view(['POST'])
-def ask_question(request):
-    question = request.data.get("question")
-    if not question:
-        return Response({"error": "Question is required"}, status=status.HTTP_400_BAD_REQUEST)
+#@api_view(['POST'])
+#def ask_question(request):
+ #   question = request.data.get("question")
+  #  if not question:
+   #     return Response({"error": "Question is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-    try:
+   # try:
         # Run the query through the RAG chain
-        result = qa_chain({"query": question})
-        answer = result.get("result", "No answer found")
-        sources = [doc.metadata for doc in result["source_documents"]]
-
-        return Response({
-            "answer": answer,
-            "sources": sources
-        })
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    #    result = qa_chain({"query": question})
+     #   answer = result.get("result", "No answer found")
+      #  sources = [doc.metadata for doc in result["source_documents"]]
+#
+ #       return Response({
+  #          "answer": answer,
+   #         "sources": sources
+    #    })
+    #except Exception as e:
+     #   return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
