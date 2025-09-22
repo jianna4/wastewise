@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,11 +95,11 @@ WSGI_APPLICATION = "project.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": "wastewise",
-        "USER": "postgres",
-        "PASSWORD": "mypass",
-        "HOST": "localhost",  # Set to 'localhost' or your database host
-        "PORT": "5432",  # Default PostgreSQL port
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),  # Set to 'localhost' or your database host
+        "PORT": os.getenv("DB_PORT"),  # Default PostgreSQL port
         "OPTIONS": {
             "options": "-c search_path=my_schema,public",
         },
