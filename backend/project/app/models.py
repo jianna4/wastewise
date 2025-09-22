@@ -1,135 +1,101 @@
+from uuid import uuid4
 from django.contrib.gis.db import models
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    BaseUserManager,
-    PermissionsMixin,
-)
-from django.utils import timezone
 
 
-# -------------------------------
-# Custom User Model
-# -------------------------------
-class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError("Email must be provided")
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+class BaseModel(models.Model):
+    """Absttract base model with uuid pk and timstamp"""
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-        return self.create_user(email, password, **extra_fields)
+    id = models.UUIDField(primary_key=True, default=uuid4(), editable=False)
+    create_at = models.DateTimeField(auto_now_add=True)
+    update_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(BaseModel):
+    USER_TYPES = [
+        ("household", "Household"),
+        ("sme", "SME"),
+        ("council", "Council"),
+        ("recycler", "Recycler"),
+    ]
+    name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
-    stars = models.PositiveIntegerField(default=0)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    password_hash = models.TextField()
+    user_type = models.CharField(max_length=20, choices=USER_TYPES)
+    location = models.PointField(geography=True, null=True, blank=True)
 
-    objects = UserManager()
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
-
-    def __str__(self):
-        return str(self.email)
+    def __str__(self) -> str:
+        return f"{self.name} ({self.user_type}) "
 
 
-# -------------------------------
-# County Model
-# -------------------------------
-class County(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+class WasteType(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4(), editable=False)
+    name = models.CharField(max_length=50)
+    description = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return str(self.name)
+    def __str__(self) -> str:
+        return self.name
 
 
-# -------------------------------
-# SubCounty Model
-# -------------------------------
-class SubCounty(models.Model):
-    county = models.ForeignKey(
-        County, on_delete=models.CASCADE, related_name="subcounties"
-    )
+class WasteRequest(BaseModel):
+    STATUS = [
+        ("pending", "Pending"),
+        ("assigned", "Assigned"),
+        ("complete", "Complete"),
+        ("cancelled", "Cancelled"),
+    ]
+    user = models.ForeignKey(User, on_delete=models.RESTRICT)
+    waste_type = models.ForeignKey(WasteType, on_delete=models.RESTRICT)
+    volume_kg = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS, default="pending")
+    schedule_time = models.DateTimeField()
+    location = models.PointField(geography=True, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f"request {self.id} - {self.user.name}"
+
+
+class Vehicle(BaseModel):
+    STATUS = [
+        ("availabe", "Availabe"),
+        ("busy", "Busy"),
+        ("offline", "Offline"),
+    ]
+    driver_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=20, unique=True)
+    current_location = models.PointField(geography=True, null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS, default="available")
+
+    def __str__(self) -> str:
+        return f"vehicle {self.id} - {self.driver_name}"
+
+
+class RecyclingCenter(BaseModel):
     name = models.CharField(max_length=100)
+    email = models.EmailField(blank=True, unique=True)
+    phone = models.CharField(max_length=20, unique=True)
+    location = models.PointField(geography=True, null=True, blank=True)
 
-    class Meta:
-        unique_together = ("county", "name")
-
-    def __str__(self):
-        return f"{self.name} ({self.county.name})"
+    def __str__(self) -> str:
+        return self.name
 
 
-# -------------------------------
-# Area Model
-# -------------------------------
-class Area(models.Model):
-    subcounty = models.ForeignKey(
-        SubCounty, on_delete=models.CASCADE, related_name="areas"
+class Collection(BaseModel):
+    STATUS = [
+        ("in_progress", "In Progress"),
+        ("completed", "Completed"),
+        ("failed", "Failed"),
+    ]
+    waste_request = models.ForeignKey(WasteRequest, on_delete=models.RESTRICT)
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.RESTRICT)
+    pickup_time = models.DateTimeField(null=True, blank=True)
+    delivered_to = models.ForeignKey(
+        RecyclingCenter, on_delete=models.RESTRICT, null=True
     )
-    name = models.CharField(max_length=100)
-
-    class Meta:
-        unique_together = ("subcounty", "name")
+    status = models.CharField(max_length=20, choices=STATUS, default="in_progress")
 
     def __str__(self):
-        return f"{self.name} ({self.subcounty.name}, {self.subcounty.county.name})"
-
-
-# -------------------------------
-# Driver Model
-# -------------------------------
-class Driver(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    vehicle_number = models.CharField(max_length=50)
-
-    def __str__(self):
-        return f"Driver: {self.user.name}"
-
-
-# -------------------------------
-# Booking Model
-# -------------------------------
-class Booking(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    area = models.ForeignKey(Area, on_delete=models.CASCADE)
-    location = models.PointField(geography=True, dim=2, null=True)
-    address = models.CharField(
-        max_length=255, blank=True, null=True
-    )  # Formatted address from the long and lat
-    raw_response = models.JSONField(blank=True, null=True)
-    pickup_date = models.DateField()
-    is_completed = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"Booking by {self.user.email} on {self.pickup_date}"
-
-
-# -------------------------------
-# Pickup Model
-# -------------------------------
-class Pickup(models.Model):
-    booking = models.OneToOneField(Booking, on_delete=models.CASCADE)
-    driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True)
-    completed_at = models.DateTimeField(default=timezone.now)
-
-    def save(self, *args, **kwargs):
-        # 1. Mark booking as complete before saving pickup
-        if not self.booking.is_completed:
-            self.booking.is_completed = True
-            self.booking.save(update_fields=["is_completed"])
-        super().save(*args, **kwargs)
-        # Award star to users
-        user = self.booking.user
-        user.stars += 1
-        user.save()
-
-    def __str__(self):
-        return f"Pickup for {self.booking.user.email} by {self.driver.user.email}"
+        return f"Collection {self.id} for Request {self.waste_request.id}"
