@@ -1,6 +1,11 @@
-from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.gis.db import models
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    BaseUserManager,
+    PermissionsMixin,
+)
 from django.utils import timezone
+
 
 # -------------------------------
 # Custom User Model
@@ -20,21 +25,20 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         return self.create_user(email, password, **extra_fields)
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
-    name = models.CharField(max_length=100,blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     stars = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    
-    objects = UserManager() 
-    USERNAME_FIELD = 'email'
+
+    objects = UserManager()
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-     
-
     def __str__(self):
-        return self.email
+        return str(self.email)
 
 
 # -------------------------------
@@ -44,33 +48,41 @@ class County(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
+
 
 # -------------------------------
 # SubCounty Model
 # -------------------------------
 class SubCounty(models.Model):
-    county = models.ForeignKey(County, on_delete=models.CASCADE, related_name='subcounties')
+    county = models.ForeignKey(
+        County, on_delete=models.CASCADE, related_name="subcounties"
+    )
     name = models.CharField(max_length=100)
 
     class Meta:
-        unique_together = ('county', 'name')
+        unique_together = ("county", "name")
 
     def __str__(self):
         return f"{self.name} ({self.county.name})"
+
 
 # -------------------------------
 # Area Model
 # -------------------------------
 class Area(models.Model):
-    subcounty = models.ForeignKey(SubCounty, on_delete=models.CASCADE, related_name='areas')
+    subcounty = models.ForeignKey(
+        SubCounty, on_delete=models.CASCADE, related_name="areas"
+    )
     name = models.CharField(max_length=100)
 
     class Meta:
-        unique_together = ('subcounty', 'name')
+        unique_together = ("subcounty", "name")
 
     def __str__(self):
         return f"{self.name} ({self.subcounty.name}, {self.subcounty.county.name})"
+
+
 # -------------------------------
 # Driver Model
 # -------------------------------
@@ -81,21 +93,24 @@ class Driver(models.Model):
     def __str__(self):
         return f"Driver: {self.user.name}"
 
+
 # -------------------------------
 # Booking Model
 # -------------------------------
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     area = models.ForeignKey(Area, on_delete=models.CASCADE)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    address = models.CharField(max_length=255, blank=True, null=True)  # Formatted address from the long and lat
-    raw_response = models.JSONField(blank=True, null=True) 
+    location = models.PointField(geography=True, dim=2, null=True)
+    address = models.CharField(
+        max_length=255, blank=True, null=True
+    )  # Formatted address from the long and lat
+    raw_response = models.JSONField(blank=True, null=True)
     pickup_date = models.DateField()
     is_completed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Booking by {self.user.email} on {self.pickup_date}"
+
 
 # -------------------------------
 # Pickup Model
@@ -109,7 +124,7 @@ class Pickup(models.Model):
         # 1. Mark booking as complete before saving pickup
         if not self.booking.is_completed:
             self.booking.is_completed = True
-            self.booking.save(update_fields=['is_completed'])
+            self.booking.save(update_fields=["is_completed"])
         super().save(*args, **kwargs)
         # Award star to users
         user = self.booking.user
