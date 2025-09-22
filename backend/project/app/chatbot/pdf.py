@@ -4,7 +4,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 import json
 
-pdf_path = r"F:\projects\wastewise\backend\project\app\waster\WasteWise_Company_Profile.pdf"
+pdf_path = r"F:\projects\wastewise\backend\project\app\chatbot\WasteWise_Company_Profile_Updated.pdf"
 loader = PyPDFLoader(pdf_path)
 
 docs = loader.load()
@@ -21,5 +21,5 @@ json_data = [
     {"content": doc.page_content, "metadata": doc.metadata}
     for doc in documents
 ]
-with open("chunkkk.json", "w", encoding="utf-8") as f:
+with open("chunks.json", "w", encoding="utf-8") as f:
     json.dump(json_data, f, indent=4, ensure_ascii=False)
