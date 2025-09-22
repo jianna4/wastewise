@@ -1,4 +1,6 @@
+from django.http import request
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models import Area, Booking
@@ -24,12 +26,19 @@ def create_booking(request):
     return Response(BookingSerializer(booking).data, status=201)
 
 
-# -------------------------------
-# List User Bookings
-# -------------------------------
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def list_user_bookings(request):
-    bookings = Booking.objects.filter(user=request.user)
-    serializer = BookingSerializer(bookings, many=True)
-    return Response(serializer.data)
+class UserCreateBookingCreateAPIView(generics.CreateAPIView):
+    """create  new booking"""
+
+    permission_classes = [IsAuthenticated]
+
+
+class UserBookingsListAPIView(generics.ListAPIView):
+    """list all the Booking to  user who is logged in"""
+
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return super().get_queryset().filter(user=user)

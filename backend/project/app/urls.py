@@ -16,7 +16,11 @@ urlpatterns = [
     ),
     # Booking endpoints
     path("bookings/create/", bookingView.create_booking, name="create_booking"),
-    path("bookings/", bookingView.list_user_bookings, name="list_user_bookings"),
+    path(
+        "bookings/",
+        bookingView.UserBookingsListAPIView.as_view(),
+        name="list_user_bookings",
+    ),
     # location endpoints
     path("counties/", locationView.list_counties, name="list_counties"),
     path(
