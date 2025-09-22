@@ -24,4 +24,4 @@ def quey_vectorstore(query):
         llm=LLM,retriever=retriever, chain_type="stuff")
     result = QA.invoke(query)
     return result
-print(quey_vectorstore("what is your company mission?"))
+#print(quey_vectorstore("what is your company mission?"))

@@ -9,6 +9,7 @@ from .serializers import (
     UserSerializer, DriverSerializer,
     BookingSerializer, PickupSerializer
 )
+import json
 #from .waster.retrieval import qa_chain
 # -------------------------------
 # Register User
@@ -181,21 +182,23 @@ def list_areas(request, subcounty_id=None):
 
 # Booking endpoint
 
-#@api_view(['POST'])
-#def ask_question(request):
- #   question = request.data.get("question")
-  #  if not question:
-   #     return Response({"error": "Question is required"}, status=status.HTTP_400_BAD_REQUEST)
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .chatbot.retrieval import quey_vectorstore
+@csrf_exempt  # disable CSRF for testing, better handle with tokens later
+def chatbot_endpoint(request):
+    if request.method == "POST":
+        try:
+            body = json.loads(request.body.decode("utf-8"))
+            query = body.get("query", None)
 
-   # try:
-        # Run the query through the RAG chain
-    #    result = qa_chain({"query": question})
-     #   answer = result.get("result", "No answer found")
-      #  sources = [doc.metadata for doc in result["source_documents"]]
-#
- #       return Response({
-  #          "answer": answer,
-   #         "sources": sources
-    #    })
-    #except Exception as e:
-     #   return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            if not query:
+                return JsonResponse({"error": "Missing 'query' in request body"}, status=400)
+
+            answer = quey_vectorstore(query)
+            return JsonResponse({"query": query, "answer": answer}, status=200)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Only POST method allowed"}, status=405)
