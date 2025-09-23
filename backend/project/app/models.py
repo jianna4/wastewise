@@ -7,31 +7,31 @@ class BaseModel(models.Model):
     """Absttract base model with uuid pk and timstamp"""
 
     id = models.UUIDField(primary_key=True, default=uuid4(), editable=False)
-    create_at = models.DateTimeField(auto_now_add=True)
-    update_at = models.DateTimeField(auto_now_add=True)
+    create_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+    update_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
 
 
-class User(BaseModel, AbstractUser):
+class User(AbstractUser):
     class UserTypes(models.Choices):
         HOUSEHOLD = "Household"
         SME = "sme"
         COUNCIL = "Council"
         RECYCLER = "Recycler"
 
-    name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
-    password_hash = models.TextField()
     user_type = models.CharField(
         max_length=20, choices=UserTypes.choices, default=UserTypes.HOUSEHOLD
     )
     location = models.PointField(geography=True, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.name} ({self.user_type}) "
+        return f"{self.email} ({self.user_type}) "
 
 
 class WasteType(models.Model):
