@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["email", "name", "phone", "password_hash", "user_type", "location"]
+        fields = ["email", "phone", "user_type", "location"]
 
 
 class WasteTypeSerializer(serializers.ModelSerializer):

@@ -1,6 +1,49 @@
+from operator import mod
 from uuid import uuid4
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.gis.db import models
+
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields) -> "User":
+        if not email:
+            raise ValueError("The Email field must be set")
+        email = self.normalize_email(email)
+        extra_fields.setdefault("is_active", True)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields) -> "User":
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+
+        return self.create_user(email, password, **extra_fields)
+
+
+class User(AbstractUser):
+    class UserTypes(models.Choices):
+        HOUSEHOLD = "Household"
+        SME = "sme"
+        COUNCIL = "Council"
+        RECYCLER = "Recycler"
+
+    id = models.UUIDField(primary_key=True, default=uuid4(), editable=False)
+    email = models.EmailField(max_length=255, unique=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    password = models.CharField(max_length=255)
+    user_type = models.CharField(
+        max_length=20, choices=UserTypes.choices, default=UserTypes.HOUSEHOLD
+    )
+    location = models.PointField(geography=True, null=True, blank=True)
+    username = None
+    objects = UserManager()
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["user_type"]
+
+    def __str__(self) -> str:
+        return f"{self.email} ({self.user_type}) "
 
 
 class BaseModel(models.Model):
@@ -14,24 +57,6 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class User(AbstractUser):
-    class UserTypes(models.Choices):
-        HOUSEHOLD = "Household"
-        SME = "sme"
-        COUNCIL = "Council"
-        RECYCLER = "Recycler"
-
-    email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    user_type = models.CharField(
-        max_length=20, choices=UserTypes.choices, default=UserTypes.HOUSEHOLD
-    )
-    location = models.PointField(geography=True, null=True, blank=True)
-
-    def __str__(self) -> str:
-        return f"{self.email} ({self.user_type}) "
 
 
 class WasteType(models.Model):
