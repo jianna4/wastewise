@@ -8,13 +8,37 @@ from app.models import (
     WasteType,
 )
 
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 class UserSerializer(serializers.ModelSerializer):
     """create user  user"""
 
     class Meta:
         model = User
-        fields = ["email", "phone", "user_type", "location"]
+        fields = ["email", "phone", "user_type", "password"]
+        readonly = ["id"]
+        extra_kwargs = {"password": {"write_only": True}}
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        user = User.objects.get(email=data["email"])
+        if not user:
+            raise AuthenticationFailed("Invalid username or password")
+        if not user.is_active:
+            raise AuthenticationFailed("User account is disabled")
+
+        refresh = RefreshToken.for_user(user)
+
+        return {
+            "accessToken": str(refresh.access_token),
+            "refreshToken": str(refresh),
+        }
 
 
 class WasteTypeSerializer(serializers.ModelSerializer):
