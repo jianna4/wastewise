@@ -98,7 +98,8 @@ DATABASES = {
         "NAME": os.getenv("DB_NAME"),
         "USER": os.getenv("DB_USER"),
         "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST"),  # Set to 'localhost' or your database host
+        # Set to 'localhost' or your database host
+        "HOST": os.getenv("DB_HOST"),
         "PORT": os.getenv("DB_PORT"),  # Default PostgreSQL port
         "OPTIONS": {
             "options": "-c search_path=my_schema,public",
@@ -147,3 +148,4 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+AUTH_USER_MODEL = "app.User"
