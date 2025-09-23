@@ -41,6 +41,43 @@ function About() {
     const data = await res.json();//parse the json response from the backend
     setAnswer(data.answer || "No answer found");
   };
+  //chatbot
+  const [query, setQuery] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const sendQuery = async () => {
+    if (!query.trim()) return;
+
+    const userMessage = { role: "user", text: query };
+    setMessages((prev) => [...prev, userMessage]);
+    setQuery("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/ask/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query }),
+      });
+
+      const data = await res.json();
+
+      const botMessage = {
+        role: "bot",
+        text: data.answer?.result || data.answer || "No response",
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", text: "⚠️ Error: " + error.message },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className='About'>
@@ -69,17 +106,53 @@ function About() {
           </Carousel.Item>
         </Carousel>
         </div>
-        <div>
-          <h1>Ask WasteRAG</h1>
-      <input
-        type="text"
-        value={question}
-        onChange={(e) => setQuestion(e.target.value)}
-        placeholder="Ask me something..."
-      />
-      <button onClick={askBackend}>Ask</button>
-      <p><b>Answer:</b> {answer}</p>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="w-full max-w-2xl bg-white shadow-lg rounded-2xl flex flex-col overflow-hidden">
+        {/* Header */}
+        <div className="bg-[#FFA500] text-white p-4 text-lg font-semibold">
+          WasteWise Chatbot
         </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+          {messages.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`p-3 rounded-xl max-w-[80%] ${
+                msg.role === "user"
+                  ? "ml-auto bg-orange-500 text-white"
+                  : "mr-auto bg-gray-200 text-gray-800"
+              }`}>
+              {msg.text}
+            </div>
+          ))}
+          {loading && (
+            <div className="mr-auto bg-gray-200 text-gray-600 p-3 rounded-xl max-w-[80%]">
+              Typing...
+            </div>
+          )}
+        </div>
+
+        {/* Input */}
+        <div className="flex items-center border-t p-3">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && sendQuery()}
+            placeholder="Ask me something..."
+            className="flex-1 border rounded-xl px-3 py-2 mr-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+          <button
+            onClick={sendQuery}
+            className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-xl shadow-md transition"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+  
         <div className="columns-containera">
              <div className="column">
               <h3>Who We Are</h3>

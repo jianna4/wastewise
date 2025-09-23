@@ -17,7 +17,7 @@ def quey_vectorstore(query):
     print("Loading vector store from 'faiss_index/'...")
     db = FAISS.load_local(r"F:\projects\wastewise\backend\project\app\chatbot\faiss_index", embeddings , allow_dangerous_deserialization=True)
     print("Vector store loaded.")
-    LLM=Ollama(model="llama3.2:1b")
+    LLM=Ollama(model="llama3.1:8b")
     retriever = db.as_retriever(search_kwargs={"k": 1})
 
     QA = RetrievalQA.from_chain_type(

@@ -186,7 +186,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .chatbot.retrieval import quey_vectorstore
 @csrf_exempt  # disable CSRF for testing, better handle with tokens later
-def chatbot_endpoint(request):
+def chatbot(request):
     if request.method == "POST":
         try:
             body = json.loads(request.body.decode("utf-8"))

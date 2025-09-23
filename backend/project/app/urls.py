@@ -21,5 +21,5 @@ urlpatterns = [
     path('subcounties/<int:subcounty_id>/areas/', views.list_areas, name='list_areas'),
 
     #rag endpoints
-    # path("ask/", views.ask_question, name="ask_question"),
+    path("ask/", views.chatbot, name="ask_question"),
 ]
