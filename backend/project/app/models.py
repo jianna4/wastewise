@@ -1,4 +1,5 @@
 from uuid import uuid4
+from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
 
 
@@ -13,18 +14,20 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class User(BaseModel):
-    USER_TYPES = [
-        ("household", "Household"),
-        ("sme", "SME"),
-        ("council", "Council"),
-        ("recycler", "Recycler"),
-    ]
+class User(BaseModel, AbstractUser):
+    class UserTypes(models.Choices):
+        HOUSEHOLD = "Household"
+        SME = "sme"
+        COUNCIL = "Council"
+        RECYCLER = "Recycler"
+
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     password_hash = models.TextField()
-    user_type = models.CharField(max_length=20, choices=USER_TYPES)
+    user_type = models.CharField(
+        max_length=20, choices=UserTypes.choices, default=UserTypes.HOUSEHOLD
+    )
     location = models.PointField(geography=True, null=True, blank=True)
 
     def __str__(self) -> str:
@@ -41,16 +44,18 @@ class WasteType(models.Model):
 
 
 class WasteRequest(BaseModel):
-    STATUS = [
-        ("pending", "Pending"),
-        ("assigned", "Assigned"),
-        ("complete", "Complete"),
-        ("cancelled", "Cancelled"),
-    ]
+    class StatusChoices(models.Choices):
+        PENDING = "pending"
+        ASSIGNED = "assigned"
+        COMPLETED = "completed"
+        CANCELLED = "cancelled"
+
     user = models.ForeignKey(User, on_delete=models.RESTRICT)
     waste_type = models.ForeignKey(WasteType, on_delete=models.RESTRICT)
     volume_kg = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=20, choices=STATUS, default="pending")
+    status = models.CharField(
+        max_length=20, choices=StatusChoices.choices, default=StatusChoices.PENDING
+    )
     schedule_time = models.DateTimeField()
     location = models.PointField(geography=True, null=True, blank=True)
 
@@ -59,15 +64,17 @@ class WasteRequest(BaseModel):
 
 
 class Vehicle(BaseModel):
-    STATUS = [
-        ("availabe", "Availabe"),
-        ("busy", "Busy"),
-        ("offline", "Offline"),
-    ]
+    class StatusChoices(models.Choices):
+        AVAILABE = "availabe"
+        BUSY = "busy"
+        OFFLINE = "offline"
+
     driver_name = models.CharField(max_length=100)
     phone = models.CharField(max_length=20, unique=True)
     current_location = models.PointField(geography=True, null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS, default="available")
+    status = models.CharField(
+        max_length=20, choices=StatusChoices.choices, default=StatusChoices.AVAILABE
+    )
 
     def __str__(self) -> str:
         return f"vehicle {self.id} - {self.driver_name}"
@@ -84,18 +91,20 @@ class RecyclingCenter(BaseModel):
 
 
 class Collection(BaseModel):
-    STATUS = [
-        ("in_progress", "In Progress"),
-        ("completed", "Completed"),
-        ("failed", "Failed"),
-    ]
+    class StatusChoices(models.Choices):
+        IN_PROGRESS = "in_progress"
+        COMPLETED = "completed"
+        Failed = "failed"
+
     waste_request = models.ForeignKey(WasteRequest, on_delete=models.RESTRICT)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.RESTRICT)
     pickup_time = models.DateTimeField(null=True, blank=True)
     delivered_to = models.ForeignKey(
         RecyclingCenter, on_delete=models.RESTRICT, null=True
     )
-    status = models.CharField(max_length=20, choices=STATUS, default="in_progress")
+    status = models.CharField(
+        max_length=20, choices=StatusChoices.choices, default=StatusChoices.IN_PROGRESS
+    )
 
     def __str__(self):
         return f"Collection {self.id} for Request {self.waste_request.id}"
