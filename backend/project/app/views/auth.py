@@ -21,7 +21,8 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
         response = Response(
-            {"accessToken": data["accessToken"]}, status=status.HTTP_200_OK
+            {"user": data["user"], "accessToken": data["accessToken"]},
+            status=status.HTTP_200_OK,
         )
         response.set_cookie(
             key="refreshToken",

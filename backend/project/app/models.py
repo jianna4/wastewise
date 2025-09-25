@@ -28,16 +28,19 @@ class User(AbstractUser):
         COUNCIL = "Council"
         RECYCLER = "Recycler"
 
-    id = models.UUIDField(primary_key=True, default=uuid4(), editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
-    password = models.CharField(max_length=255)
+    # password = models.CharField(max_length=255)
     user_type = models.CharField(
         max_length=20, choices=UserTypes.choices, default=UserTypes.HOUSEHOLD
     )
     location = models.PointField(geography=True, null=True, blank=True)
     username = None
+    first_name = None
+    last_name = None
     objects = UserManager()
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["user_type"]
 

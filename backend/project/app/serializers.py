@@ -1,3 +1,4 @@
+from django.contrib.auth.models import update_last_login
 from rest_framework import serializers
 from app.models import (
     Collection,
@@ -10,6 +11,7 @@ from app.models import (
 
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -18,8 +20,16 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["email", "phone", "user_type", "password"]
-        readonly = ["id"]
+        read_only_fields = ["id"]
         extra_kwargs = {"password": {"write_only": True}}
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        print(validated_data)
+        user = User(**validated_data)
+        user.set_password(password)  # hash password
+        user.save()
+        return user
 
 
 class LoginSerializer(serializers.Serializer):
@@ -27,15 +37,23 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
-        user = User.objects.get(email=data["email"])
-        if not user:
-            raise AuthenticationFailed("Invalid username or password")
+        print({"email": data.get("email"), "password": data.get("password")})
+        user = authenticate(
+            request=self.context.get("request"),
+            email=data.get("email"),
+            password=data.get("password"),
+        )
+
+        if user is None:
+            raise AuthenticationFailed("Invalid email or password")
         if not user.is_active:
             raise AuthenticationFailed("User account is disabled")
 
+        update_last_login(None, user)
         refresh = RefreshToken.for_user(user)
 
         return {
+            "user": UserSerializer(user).data,
             "accessToken": str(refresh.access_token),
             "refreshToken": str(refresh),
         }
