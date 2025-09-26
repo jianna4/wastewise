@@ -5,7 +5,10 @@ from rest_framework_simplejwt.views import (
 )
 
 from app.views.user import UserProfileView
-from app.views.waste import WasteRequestViewSet
+from app.views.waste import (
+    WasteRequestListCreateAPIView,
+    WasteRequestRetrieveUpdateAPIView,
+)
 from app.views.auth import LoginView, UserRegistrationView
 
 
@@ -22,8 +25,18 @@ urlpatterns = [
         UserProfileView.as_view(),
         name="profile",
     ),
+    # waste_request endpoints
+    path(
+        "waste-requests/",
+        WasteRequestListCreateAPIView.as_view(),
+        name="creat/listRequest",
+    ),
+    path(
+        "waste-requests/<str:pk>",
+        WasteRequestRetrieveUpdateAPIView.as_view(),
+        name="update/get_wasteRequest",
+    ),
 ]
 router = DefaultRouter()
 
-router.register("wasteRequest", WasteRequestViewSet)
 urlpatterns += router.urls
