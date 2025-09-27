@@ -73,7 +73,7 @@ class WasteRequestSerializer(serializers.ModelSerializer):
         model = WasteRequest
         fields = [
             "user",
-            "waste_type ",
+            "waste_type",
             "volume_kg",
             "status",
             "schedule_time",

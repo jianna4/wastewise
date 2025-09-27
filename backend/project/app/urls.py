@@ -5,14 +5,39 @@ from rest_framework_simplejwt.views import (
 )
 
 from app.views.user import UserProfileView
+from app.views.vehicles import (
+    VehiclesListCreateAPIView,
+    VehiclesRetriveUpdateAPIView,
+)
 from app.views.waste import (
     WasteRequestListCreateAPIView,
     WasteRequestRetrieveUpdateAPIView,
 )
 from app.views.auth import LoginView, UserRegistrationView
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Snippets API",
+        default_version="v1",
+        description="Test description",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@snippets.local"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 urlpatterns = [
+    # api docs
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
     path(
         "register/",
         UserRegistrationView.as_view(),
@@ -35,6 +60,13 @@ urlpatterns = [
         "waste-requests/<str:pk>",
         WasteRequestRetrieveUpdateAPIView.as_view(),
         name="update/get_wasteRequest",
+    ),
+    # vehicles  endpoints
+    path("vehicles/", VehiclesListCreateAPIView.as_view(), name="create/list"),
+    path(
+        "vehicles/<str:pk>",
+        VehiclesRetriveUpdateAPIView.as_view(),
+        name="retrive/update",
     ),
 ]
 router = DefaultRouter()
