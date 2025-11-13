@@ -28,8 +28,9 @@ function Home() {
         <div className=' mt-20 text-center w-full md:w-1/2 '>
           <h1>Fast,Reliable & clean Garbage collection</h1>
           <p>book to get your gabage collected today,lets build a cleaner world one pick upat a time.</p>
-          <div className='bdiv'>
-          <button className='button bg-[#FFA500]' onClick={() => navigate('/book')}>Book a pickup
+          <div >
+          <button className='px-6 py-2 rounded border-1 border-black bg-[#FFA500] 
+  hover:scale-105 hover:border-4' onClick={() => navigate('/book')}><h6 class="text-6xl font-bold text-white"class="text-6xl font-bold text-white"class="text-6xl font-bold text-white"class="text-6xl font-bold text-white"class="text-6xl font-bold text-white"class="text-6xl font-bold text-white"class="text-20xl font-bol">Book a pickup</h6>
             </button>
             </div>
         </div>
@@ -57,8 +58,10 @@ function Home() {
           <div clasName=''>
             <h3>Making a cleaner world with every pickup</h3>
             <p>We are committed to providing fast, reliable, and clean garbage collection services to help keep our communities clean and healthy.</p>
-            <div  className='bdiv'><button className='button' onClick={() => navigate('/about')}>Learn more</button></div>
+            <div  className='bdiv'><button className='px-6 py-2 rounded border-1 border-black bg-[#FFA500] 
+  hover:scale-105 hover:border-4' onClick={() => navigate('/about')}>Learn more</button></div>
           </div>
+          
           <div className='w-full  bg-white p-8 rounded-xl shadow-lg'>
             <h3>We collect all types of waste:</h3>
             <ul className='mt-4'>
