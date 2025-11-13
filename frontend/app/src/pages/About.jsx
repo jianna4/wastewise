@@ -106,35 +106,33 @@ function About() {
           </Carousel.Item>
         </Carousel>
         </div>
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="flex flex-col items-center justify-center pt-4">
       <div className="w-full max-w-2xl bg-white shadow-lg rounded-2xl flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="bg-[#FFA500] text-white p-4 text-lg font-semibold">
-          WasteWise Chatbot
-        </div>
+        
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+        <div className="flex-1 overflow-y-auto p-0 space-y-1 bg-gray-50">
           {messages.map((msg, idx) => (
             <div
               key={idx}
-              className={`p-3 rounded-xl max-w-[80%] ${
+              className={`p-3 max-w-[80%] ${
                 msg.role === "user"
                   ? "ml-auto bg-orange-500 text-white"
                   : "mr-auto bg-gray-200 text-gray-800"
               }`}>
-              {msg.text}
+ {msg.text}
             </div>
           ))}
           {loading && (
-            <div className="mr-auto bg-gray-200 text-gray-600 p-3 rounded-xl max-w-[80%]">
+            <div className="mr-auto bg-gray-200 text-gray-600 p-1 rounded-xl max-w-[80%]">
               Typing...
             </div>
           )}
         </div>
 
         {/* Input */}
-        <div className="flex items-center border-t p-3">
+        <div className="flex items-center border-t p-1">
           <input
             type="text"
             value={query}
@@ -145,7 +143,7 @@ function About() {
           />
           <button
             onClick={sendQuery}
-            className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-xl shadow-md transition"
+            className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-xl shadow-md transition "
           >
             Send
           </button>

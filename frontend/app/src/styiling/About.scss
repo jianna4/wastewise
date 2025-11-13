@@ -54,6 +54,7 @@ $primary-color2: #FFA500;
   padding: 1rem;
   max-width: 1200px;
   margin: 0 auto;
+  min-height: 50vh;
 
   // All columns will have equal height by default
   .column {
@@ -63,14 +64,13 @@ $primary-color2: #FFA500;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    margin-top: 60px;
-    
-    // Content styling
+    margin-top: 10px;
+   
     h3 {
       color: #333;
       margin-bottom: 1rem;
       font-size: 1.25rem;
-
+      margin-top: 2rem;
     }
     
     p {
