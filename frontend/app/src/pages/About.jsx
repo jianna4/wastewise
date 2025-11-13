@@ -86,22 +86,22 @@ function About() {
           <Carousel.Item interval={3000}> {/* Adjust interval as needed */}
              <img src={img1} alt="First slide" className='w-full h-screen object-cover object-center'/>
             <Carousel.Caption>
-              <h3>Here for you</h3>
-              <p>Our able team making sure that we leave your environment squicky clean</p>
+              <h3>Here for a Cleaner Tomorrow</h3>
+              <p>Our dedicated team works tirelessly to ensure waste is collected, sorted, and managed responsibly every day.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item interval={3000}>
             <img src={img2} alt="Second slide" className='w-full h-screen object-cover object-center'/>
             <Carousel.Caption>
-              <h3>community service</h3>
-              <p>We organise for commuijty inclusivity.</p>
+              <h3>Together for a Sustainable Future</h3>
+              <p>Through eco-friendly waste collection and public awareness, we’re paving the way for greener, cleaner living.</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item interval={3000}>
             <img src={img3} alt="Third slide" className='w-full h-screen object-cover object-center'/>
             <Carousel.Caption>
-              <h3>For a better earth</h3>
-              <p>yes yes yes.</p>
+              <h3>Serving Communities with Care</h3>
+              <p>We partner with local neighborhoods to keep streets clean, promote recycling, and build a healthier environment for all.</p>
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>

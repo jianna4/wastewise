@@ -5,29 +5,33 @@ $primary-color2: #FFA500;
 }
 .carousell {
   margin: 0 auto; /* This centers the carousel */
+  
 }
 
 .carousel {
   border-radius: 10px; /* Optional: adds rounded corners */
   overflow: hidden; /* Keeps the rounded corners visible */
+  
 }
 
 .imgca {
   width: 100%;
    min-height: 100vh; /* Fixed height for consistency */
   object-fit: cover; /* Ensures images cover the area without distortion */
+  
 }
 
 .carousel-caption {
   text-align: center;
-  left: 5%;
+  left: 29%;
   right: auto;
-  bottom: 20%;
+  bottom: 40%;
   padding: 20px;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  //border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
+  border-radius: 25px;
   max-width: 50%; /* Limits caption width */
   margin-top: 20px;
+  
   
 }
 
